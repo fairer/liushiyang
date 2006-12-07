@@ -9,8 +9,11 @@ public class DaTing {
 	public static List rooms = new ArrayList();
 	
 	public Room createRoom(User us){
-		
+		if(rooms.size()>maxRooms){
+			return null;
+		}
 		Room room = new Room(us);
+		us.setRoom(room);
 		rooms.add(room);
 		return room;
 	}
