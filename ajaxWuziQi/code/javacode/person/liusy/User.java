@@ -35,6 +35,11 @@ public class User {
 			qipu.y = y;
 			qipus.add(qipu);
 			room.isBlackGo = !room.isBlackGo;
+			if(DaTing.win(y,x,isBlack?1:0,qipan)){
+				//返回胜利标志,本局完
+			}else{
+				//
+			}
 		}
 		else{
 			throw new WuziQiException("");
