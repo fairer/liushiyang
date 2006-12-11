@@ -30,6 +30,7 @@ public class Room {
 	 */
 	public boolean isBlackGo;
 	public Room(User us){
+		isBlackGo = true;
 		roomStatus = 0;
 		userA = us;
 		qipan= new int[20][20];

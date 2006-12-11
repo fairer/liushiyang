@@ -64,7 +64,7 @@ public class User {
 	public QiPu getQiPuByNum(int i){
 		
 		List qipus = room.getQipus();
-		if(qipus.get(i)!=null){
+		if(qipus.size()>i){
 			QiPu qipu = (QiPu)qipus.get(i);
 			return qipu;
 			
@@ -87,6 +87,12 @@ public class User {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+	public boolean isBlack() {
+		return isBlack;
+	}
+	public void setBlack(boolean isBlack) {
+		this.isBlack = isBlack;
 	}
 	
 	
