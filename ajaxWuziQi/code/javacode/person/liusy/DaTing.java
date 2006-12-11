@@ -7,19 +7,31 @@ import java.util.List;
 
 public class DaTing {
 
-	private int maxRooms = 100;
+	private static int maxRooms = 100;
 	public static List rooms = new ArrayList();
 
-	public Room createRoom(User us) {
+	public static Room createRoom(User us) {
 		if (rooms.size() > maxRooms) {
 			return null;
 		}
 		Room room = new Room(us);
 		us.setRoom(room);
+		us.queryNum = 1;
 		rooms.add(room);
 		return room;
 	}
-
+	public static Room joinRoom(User us,String roomId) {
+		Room room = (Room)rooms.get(Integer.parseInt(roomId));
+		if(room == null)
+			return null;
+		if(room.getUserB() != null)
+			return null;
+		room.setUserB(us);
+		room.roomStatus =2;
+		us.setRoom(room);
+		us.queryNum = 1;
+		return room;
+	}
 	public static boolean win(int col, int row, int c, int[][] mat) {
 		int nh, nv, nd, ni, x, y;
 

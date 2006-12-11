@@ -6,7 +6,8 @@
 <script language="javascript" type="text/javascript" src="js/prototype.js"></script>
 </head>
 
-<body >
+<body onload="<%if(session.getAttribute("wait") != null){%>waitForStart()<%}else{%>goStart()<%}%>">
+<div id="div_to_be_updated" style="position:absolute; top: 20%; left:42%; z-index:2; visibility:visible; width: %10; height: 5%;font:36pt;color:red"></div>
 <%for(int i=0;i<20;i++){
 	for(int j=0;j<20;j++){%>
 	<div  id="chess<%=i%><%=j%>"  style="position:absolute; top: <%=20+i*30%>px; left:<%=20+j*30%>px; z-index:1; visibility:visible; width: 30px; height: 30px">
@@ -29,6 +30,36 @@
 </body>
 </html>
 <script language="javascript">
+
+	function waitForStart(){
+		try{
+			$('div_to_be_updated').style.display = 'block';
+			$('div_to_be_updated').innerHTML = '等待对方进入房间...';
+			new Ajax.Updater('div_to_be_updated', url, {asynchronous:true, onSuccess:sucessQuery, onFailure:failQuery }); 
+			return false;
+		}catch(e){
+			alert(e.message);
+			return false;
+		}	
+		return false;
+	}
+	function sucessQuery(t){
+		$('div_to_be_updated').style.display = 'none';
+		$('zhengCeContent').innerHTML = '<table width=100%  border=0 >'+t.responseText+'</table>';
+	}
+	function failQuery(t){
+		alert('wrong');
+	}
+	
+	function goStart(){
+	
+	}
+	
+	
+	
+	
+	
+	
 	var black = true;
 	var object,url;
 	temp = 0;
@@ -54,6 +85,7 @@
 		}catch(e){
 			alert(e.message);
 		}	
+		
 	}
 	function donghua(){
 		var oldurl = $(object).src;

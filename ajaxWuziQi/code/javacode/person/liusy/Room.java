@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Room {
+	
+	/**
+	 * 当前房间状态 0:未开始，1:已开始 2:已结束
+	 */
+	public int roomStatus;
 	/**
 	 * 黑方
 	 */
@@ -25,6 +30,7 @@ public class Room {
 	 */
 	public boolean isBlackGo;
 	public Room(User us){
+		roomStatus = 0;
 		userA = us;
 		qipan= new int[20][20];
 		qipus = new ArrayList();
