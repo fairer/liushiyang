@@ -23,24 +23,27 @@ public class WuziQiServlet extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		String reqCode = request.getParameter("reqCode");
-		if(reqCode == null){
+		response.setContentType("text/xml;charset=GB2312");
+	  response.setHeader("Cache-Control", "no-cache");
+    if(reqCode == null){
 			
 		}else if(reqCode.equals("login")){
 			String userName= request.getParameter("userName");
 			User user = new User(userName);
 			session.setAttribute("UserInfo",user);
+			response.sendRedirect("../login.jsp");
 		}
 		else if(reqCode.equals("createRoom")){
 			User user = (User)session.getAttribute("UserInfo");
 			if(DaTing.createRoom(user) != null){
 				session.setAttribute("wait","wait");
-				response.sendRedirect("qipan.jsp");
+				response.sendRedirect("../qipan.jsp");
 			}
 		}else if(reqCode.equals("joinRoom")){
 			String roomId = request.getParameter("roomId");
 			User user = (User)session.getAttribute("UserInfo");
 			if(DaTing.joinRoom(user,roomId) != null){
-				response.sendRedirect("qipan.jsp");
+				response.sendRedirect("../qipan.jsp");
 			}
 		}else if(reqCode.equals("waitStart")){
 			User user = (User)session.getAttribute("UserInfo");
@@ -72,8 +75,7 @@ public class WuziQiServlet extends HttpServlet {
 			out.close();
 		}else if(reqCode.equals("queryLuozi")){
 			User user = (User)session.getAttribute("UserInfo");
-			int num = Integer.parseInt(request.getParameter("num"));
-			QiPu qipu = user.getQiPuByNum(num);
+			QiPu qipu = user.getQiPuByNum(user.queryNum);
 			String result ="";
 			if(qipu == null){
 				result = "0";
@@ -93,12 +95,6 @@ public class WuziQiServlet extends HttpServlet {
 			out.flush();
 			out.close();
 		}
-		User user = (User)session.getAttribute("UserInfo");
-		
-		PrintWriter out = response.getWriter();
-		out.write("");
-		out.flush();
-		out.close();
 		
 	}
 	
