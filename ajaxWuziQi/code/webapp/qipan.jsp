@@ -7,6 +7,7 @@
 </head>
 
 <body onload="<%if(session.getAttribute("wait") != null){%>waitForStart()<%}else{%>queryLuozi()<%}%>">
+<div id="div_fullscreen" style="position:absolute; background-color:#999999; filter:alpha(opacity=60); top: 0%; left:0%; z-index:5;  width: 100%; height: 100%"></div>
 <div id="div_to_be_hidden" style="position:absolute; top: 20%; left:42%; z-index:1; visibility:hidden; width: %10; height: 5%;font:36pt;color:red"></div>
 <div id="div_to_be_updated" style="position:absolute; top: 20%; left:42%; z-index:2; visibility:visible; width: %10; height: 5%;font:36pt;color:red"></div>
 <%for(int i=0;i<20;i++){
@@ -34,18 +35,29 @@
 </html>
 <script language="javascript">
 
-	var clickFuns = new Array();
-	for(var i=0;i< 20;i++){
-		clickFuns[i] = new Array();
-	}
+	//var clickFuns = new Array();
+	//for(var i=0;i< 20;i++){
+	//	clickFuns[i] = new Array();
+	//}
+	for(var i = 0; i< 20; i++)
+			for(var j = 0;j<20;j++){
+				//if(!($('img'+i+j).src.indexOf('10.GIF')>=0 || $('img'+i+j).src.indexOf('11.GIF')>=0)){
+					with($('chess'+i+j)){
+						style.cursor="hand";
+						//attachEvent("onclick",clickFuns[i][j] = new Function("luoZi("+i+", "+j+")")); 
+						attachEvent("onclick",new Function("luoZi("+i+", "+j+")"));  
+					}
+				//}
+			}
 	function waitForStart(){
 		try{
-			$('div_to_be_updated').style.display = 'block';
 			$('div_to_be_updated').innerHTML = '等待对方进入房间...';
+			$('div_fullscreen').style.display = 'block';
 			new Ajax.Updater('div_to_be_hidden', 'servlet/WuziQiServlet?reqCode=waitStart', {asynchronous:true, onSuccess:sucessWaitStart, onFailure:failQuery }); 
 			return false;
 		}catch(e){
 			alert(e.message);
+			waitForStart();
 			return false;
 		}	
 		return false;
@@ -60,15 +72,9 @@
 	}
 	
 	function canBeClick(){
-		for(var i = 0; i< 20; i++)
-			for(var j = 0;j<20;j++){
-				if(!($('img'+i+j).src.indexOf('10.GIF')>=0 || $('img'+i+j).src.indexOf('11.GIF')>=0)){
-					with($('chess'+i+j)){
-						style.cursor="hand";
-						attachEvent("onclick",clickFuns[i][j] = new Function("luoZi("+i+", "+j+")"));   
-					}
-				}
-			}
+		
+		
+		$('div_fullscreen').style.display = 'none';
 		$('div_to_be_updated').style.display = 'block';
 		$('div_to_be_updated').innerHTML = '现在该你下棋，请落子...';	
 	}
@@ -90,6 +96,10 @@
 	function luoZi(x,y){
 		try{
 			//alert('1')
+			if($('img'+x+y).src.indexOf('10.GIF') >= 0 || $('img'+x+y).src.indexOf('img/11.GIF')>=0){
+				alert("此处不能下棋");
+				return false;
+			}
 			if(black)
 				$('img'+x+y).src = 'img/10.GIF';
 			else
@@ -97,13 +107,15 @@
 			$('div_to_be_updated').style.display = 'block';
 			$('div_to_be_updated').innerHTML = '正在向服务器传送下棋信息...';
 			//alert('2')
-			cancelAll();
+			////cancelAll();
+			$('div_fullscreen').style.display = 'block';
 			//alert('3')
 			new Ajax.Updater('div_to_be_hidden', 'servlet/WuziQiServlet?reqCode=luoZi&x='+x+'&y='+y, {asynchronous:true, onSuccess:sucessLuoZi, onFailure:failQuery }); 
 			//alert('4')
 			return false;
 		}catch(e){
 			alert(e.message);
+			luoZi(x,y);
 			return false;
 		}	
 		return false;
@@ -113,7 +125,11 @@
 		if(t.responseText == '-1'){
 			alert('这步不该你走！');
 		}else if(t.responseText == '1'){
-			alert('恭喜你获得胜利！');
+			if(confirm('恭喜你获得胜利！再来一局吗?')){
+					
+			}else{
+					
+			}
 		}else if(t.responseText == '0'){
 			//该步已走完,询问对方下棋
 			queryLuozi();
@@ -123,10 +139,12 @@
 		try{
 			$('div_to_be_updated').style.display = 'block';
 			$('div_to_be_updated').innerHTML = '等待对手下棋信息...';
+			$('div_fullscreen').style.display = 'block';
 			new Ajax.Updater('div_to_be_hidden', 'servlet/WuziQiServlet?reqCode=queryLuozi', {asynchronous:true, onSuccess:sucessQueryLuozi, onFailure:failQuery }); 
 			return false;
 		}catch(e){
 			alert(e.message);
+			queryLuozi();
 			return false;
 		}	
 		return false;
@@ -136,16 +154,21 @@
 		if(str == '0'){
 			setTimeout('queryLuozi()',1000);
 		}else {
-			//1 (0) &&x&&y@@1(0)
-			//黑(白)&&x坐标&&y坐标@@对方赢(继续走)
+			//数据格式:1 (0) &&x&&y@@1(0)
+			//说明:黑(白)&&x坐标&&y坐标@@对方赢(继续走)
 			$('div_to_be_updated').style.display = 'none';
+			
 			var result_r = new Array();
 			var result_c = new Array();
 			result_r = str.split('@@');
 			result_c = result_r[0].split('&&');
 			showChess(result_c[1],result_c[2]);
 			if(result_r[1]=='1')
-				alert('对方已获得胜利！');
+				if(confirm('对方已获得胜利！再来一局吗?')){
+					
+				}else{
+					
+				}
 			else
 				setTimeout('canBeClick()',2500);	
 		}

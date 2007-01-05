@@ -22,7 +22,9 @@ public class DaTing {
 		return room;
 	}
 	public static Room joinRoom(User us,String roomId) {
-		Room room = (Room)rooms.get(Integer.parseInt(roomId));
+		Room room = null;
+		if(rooms.size() > Integer.parseInt(roomId))
+			room = (Room)rooms.get(Integer.parseInt(roomId));
 		if(room == null)
 			return null;
 		if(room.getUserB() != null)
@@ -92,8 +94,8 @@ public class DaTing {
 			x = x - 1;
 			y = y + 1;
 		}
-		x = col;
-		y = row;
+		x = row;
+		y = col;
 		while (x + 1 < 20 && y - 1 > -1 && mat[x + 1][y - 1] == c) {
 			ni = ni + 1;
 			x = x + 1;
