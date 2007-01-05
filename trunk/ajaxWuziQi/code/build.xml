@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="GB2312"?>
+<project name="Webapp Precompilation" default="all" basedir="."> 
+<property file="build.properties"/>
+<!-- 设定工程编译临时存放class路径 -->
+<property name="dest" value="build/classes.ant"/>
+<!-- 设定工程发布后的路径 -->
+<property name="webdest" value="build/WebRoot"/>
+
+  
+
+<!-- 设定工程依赖的jar包 -->
+  <path id="project.class.path">
+    <pathelement location="${java.home}/jre/lib/rt.jar"/>
+    <pathelement location="${java.home}/lib/tools.jar"/>
+    <pathelement location="${dest}"/>
+    <fileset file="${tomcat.home}/bin/*.jar"/> 
+    <fileset file="${tomcat.home}/server/lib/*.jar"/> 
+    <fileset file="${tomcat.home}/common/lib/*.jar"/> 
+    
+  </path>
+<!-- 编译jsp文件 -->
+  <target name="jspc"> 
+
+    <taskdef classname="org.apache.jasper.JspC" name="jasper2" > 
+      <classpath id="jspc.classpath"> 
+	
+    <pathelement location="${java.home}/jre/lib/rt.jar"/>
+    <pathelement location="${java.home}lib/tools.jar"/>
+     
+      <pathelement location="${dest}"/>
+        <fileset dir="${tomcat.home}/bin"> 
+          <include name="*.jar"/> 
+        </fileset> 
+        <fileset dir="${tomcat.home}/server/lib"> 
+          <include name="*.jar"/> 
+        </fileset> 
+        <fileset dir="${tomcat.home}/common/lib"> 
+          <include name="*.jar"/> 
+        </fileset> 
+       
+      </classpath> 
+    </taskdef> 
+
+    <jasper2 javaEncoding="GBK"
+             validateXml="false" 
+             uriroot="${webapp.path}" 
+             webXmlFragment="${project.home}/build/generated_web.xml" 
+             outputDir="${project.home}/build/src" /> 
+
+  </target> 
+	<target name="jspcompile">
+
+    <mkdir dir="${project.home}/build/WEB-INF/classes"/>
+    <mkdir dir="${project.home}/build/WEB-INF/lib"/>
+
+    <javac destdir="${project.home}/build/WEB-INF/classes" srcdir="${project.home}/build/src" fork="true" memoryMaximumSize="512000k"
+           debug="false" deprecation="true" encoding="GBK" nowarn="false" target="1.4">
+           
+      
+      <classpath>
+        
+    <pathelement location="${java.home}/jre/lib/rt.jar"/>
+    <pathelement location="${java.home}lib/tools.jar"/>
+     
+      <pathelement location="${dest}"/>
+        <fileset dir="${tomcat.home}/bin"> 
+          <include name="*.jar"/> 
+        </fileset> 
+        <fileset dir="${tomcat.home}/server/lib"> 
+          <include name="*.jar"/> 
+        </fileset> 
+        <fileset dir="${tomcat.home}/common/lib"> 
+          <include name="*.jar"/> 
+        </fileset> 
+        <pathelement location="${tomcat.home}/common/classes"/>
+       
+        <pathelement location="${tomcat.home}/shared/classes"/>
+         
+      </classpath>
+      <include name="**" />
+      <exclude name="tags/**" />
+    </javac>
+<jar jarfile="${project.home}/build/jsp.jar" basedir="${project.home}/build/WEB-INF/classes"/>
+<jar jarfile="${project.home}/build/code.jar" basedir="${dest}"/>
+  </target>
+
+
+  <!-- 初始化任务 -->
+  <target name="init">
+    <delete dir="${dest}"/>
+    <mkdir dir="${dest}"/>
+    <delete dir="${webdest}"/>
+    <mkdir dir="${webdest}"/>
+    <delete dir="${project.home}/build/src"/>
+    <mkdir dir="${project.home}/build/src"/>
+    <delete dir="${project.home}/build/WEB-INF/classes"/>
+    <mkdir dir="${project.home}/build/WEB-INF/classes"/>
+    
+  </target>
+
+  
+    
+  
+  <target name="javacompileonly" depends="init">
+    <!-- 编译java源文件到目标中 -->
+    <echo message="编译java源文件app到目标路径：${dest}"/>
+    <javac bootclasspathref="project.class.path"  debug="true" deprecation="false" destdir="${dest}" encoding="GBK" nowarn="false" target="1.4">
+      <src path="${src}"/>
+    </javac>
+  </target>
+  <!-- 编译java源代码 -->
+  <target name="javacompile" depends="javacompileonly">
+    <!-- 编译java源文件到目标中 -->
+    <echo message="编译java源文件到目标路径：${dest}"/>
+    <!-- 将源代码下的配置文件拷到目标路径 -->
+    <echo message="将源代码下的配置文件拷到目标路径${dest}"/>    
+    <copy todir="${dest}">
+      <fileset dir="${src}">
+        <include name="**/*.*"/>
+        <include name="**/*"/>
+        <exclude name="*.svn/"/>
+        <exclude name="**/*.java"/>
+        <exclude name="**/*.bak"/>
+      </fileset>
+    </copy>
+  </target>
+   
+  <!--拷贝资源 文件 -->
+  <target name="webresource" >
+    <echo message="拷贝发布文件目标路径${dest}"/>
+    <copy todir="${webdest}">
+      <fileset dir="${webapp.path}">
+        <include name="**/*.*"/>
+        <include name="**/*"/>
+        <exclude name="*.snv/"/>
+        <exclude name="**/*.jsp"/>
+        <exclude name="**/*.bak"/>
+      </fileset>
+    </copy>
+    <echo message="拷贝lib目标路径${dest}"/>
+    <copy todir="${webdest}/WEB-INF/lib">
+      <fileset dir="${webapp.path}/WEB-INF/lib">
+      	<include name="*.jar"/>
+        <exclude name="*.snv/"/>
+      </fileset>
+      
+    </copy>
+  </target>
+  <target name="all" depends="init,javacompile,jspc,jspcompile,webresource">
+  </target>
+	
+	
+</project>

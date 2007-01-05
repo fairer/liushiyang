@@ -38,12 +38,16 @@ public class WuziQiServlet extends HttpServlet {
 			if(DaTing.createRoom(user) != null){
 				session.setAttribute("wait","wait");
 				response.sendRedirect("../qipan.jsp");
+			}else{
+				response.sendRedirect("../login.jsp");
 			}
 		}else if(reqCode.equals("joinRoom")){
 			String roomId = request.getParameter("roomId");
 			User user = (User)session.getAttribute("UserInfo");
 			if(DaTing.joinRoom(user,roomId) != null){
 				response.sendRedirect("../qipan.jsp");
+			}else{
+				response.sendRedirect("../login.jsp");
 			}
 		}else if(reqCode.equals("waitStart")){
 			User user = (User)session.getAttribute("UserInfo");
