@@ -14,7 +14,7 @@ function XiorkFlowWorkSpace() {
 }
 
 //
-XiorkFlowWorkSpace.BASE_PATH = "/XiorkFlow/";
+XiorkFlowWorkSpace.BASE_PATH = "/flowdesigner/";
 
 //
 XiorkFlowWorkSpace.XIORK_FLOW_PATH = XiorkFlowWorkSpace.BASE_PATH + "XiorkFlow/";

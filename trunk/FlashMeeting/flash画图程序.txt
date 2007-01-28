@@ -1,0 +1,275 @@
+用Action Script进行控制，可以随机画出各种图形，该教程为系列讲座，提供了许多很有用的AS代码…… 
+　　使用方法：把代码拷到帧中就可看到效果
+
+用鼠标任意画线
+
+效果：可按住鼠标任意画线，可作简单的涂鸭工具
+
+代码：
+
+createEmptyMovieClip("xian",1);
+with (xian) {
+ _root.onMouseMove = function() {
+ if (draw) {
+ _root.lineStyle(0,0x000000, 100);
+ _root.lineTo(_root._xmouse,_root._ymouse);
+ }
+ };
+ _root.onMouseDown = function() {
+ draw = true;
+ _root.moveTo(_root._xmouse,_root._ymouse);
+ };
+ _root.onMouseUp = function() {
+ draw = false;
+ };
+}　　
+ 用鼠标任意画直线
+
+效果：类似flash中的直线工具
+
+代码： 
+
+createEmptyMovieClip("line", n);
+with (line) {
+ lineStyle(1, 0x000000, 100);
+ moveTo(0, 0);
+ lineTo(100, 100);
+ line._visible = 0;
+}
+_root.onMouseDown = function() {
+ qidian_x = _root._xmouse;
+ qidian_y = _root._ymouse;
+ with (line) {
+ _x = qidian_x;
+ _y = qidian_y;
+ _xscale = 0;
+ _yscale = 0;
+ _visible = 1;
+ }
+};
+_root.onMouseMove = function() {
+ endX = _root._xmouse;
+ endY = _root._ymouse;
+ if (_root.line != "_root.line" && key.isdown(16)){
+ if (Math.abs(endX-qidian_x)>Math.abs(endY-qidian_y)){
+ setProperty(_root.line, _xscale, endX-qidian_x);
+ setProperty(_root.line,_yscale, endX-qidian_x);
+ } else {
+ setProperty(_root.line, _xscale, endY-qidian_y);
+ setProperty(_root.line, _yscale, endY-qidian_y);
+ }
+ } else {
+ setProperty(_root.line, _xscale,endX-qidian_x);
+ setProperty(_root.line, _yscale,endY-qidian_y);
+ }
+};
+_root.onMouseUp = function() {
+ if (_root._xmouse-qidian_x != 0) {
+ i++;
+ Objectx = "Copy" add i;
+ duplicateMovieClip(_root.line, Objectx, i);
+ setProperty(Objectx, _x, qidian_x);
+ setProperty(Objectx, _y, qidian_y);
+ _root.i = i;
+ }
+ setProperty(_root.line, _visible, 0);
+};　　 用鼠标任意画矩形
+
+效果：类似flash中的矩形工具
+
+代码： 
+
+createEmptyMovieClip("line", n);
+with (line) {
+ lineStyle(0.1, 0x000000, 100);
+ moveTo(0, 0);
+ lineTo(100, 0);
+ lineTo(100, 100);
+ lineTo(0, 100);
+ lineTo(0,0);
+ line._visible = 0;
+}
+_root.onMouseDown = function() {
+ qidian_x = _root._xmouse;
+ qidian_y = _root._ymouse;
+ with (line) {
+ _x = qidian_x;
+ _y = qidian_y;
+ _xscale = 0;
+ _yscale = 0;
+  _visible = 1;
+ }
+};
+_root.onMouseMove = function() {
+ endX = _root._xmouse;
+ endY = _root._ymouse;
+ if (_root.line != "_root.line" && key.isdown(16)){
+ if (Math.abs(endX-qidian_x)>Math.abs(endY-qidian_y)){
+ setProperty(_root.line,_xscale, endX-qidian_x);
+ setProperty(_root.line, _yscale, endX-qidian_x);
+ } else {
+ setProperty(_root.line,_xscale, endY-qidian_y);
+ setProperty(_root.line,_yscale, endY-qidian_y);
+}
+ } else {
+ setProperty(_root.line, _xscale,endX-qidian_x);
+ setProperty(_root.line, _yscale,endY-qidian_y);
+ }
+};
+_root.onMouseUp = function() {
+ if (_root._xmouse-qidian_x != 0) {
+ i++;
+ Objectx = "Copy" add i;
+ duplicateMovieClip(_root.line,Objectx, i);
+ setProperty(Objectx, _x, qidian_x);
+ setProperty(Objectx, _y, qidian_y);
+ _root.i = i;
+ }
+ setProperty(_root.line, _visible, 0);
+};　　用鼠标任意画圆、椭圆
+
+效果：类似flash中的工具
+
+代码：
+
+createEmptyMovieClip("line", n);
+with (line) {
+ for (n=1; n<400; n++) {
+ a = 50*Math.cos(n*Math.PI/180);
+ b = 50*Math.sin(n*Math.PI/180);
+ c = 50*Math.cos((n+1)*Math.PI/180);
+ d = 50*Math.sin((n+1)*Math.PI/180);
+ lineStyle(0.01, 0x000000, 50);
+ moveTo(a+50, b+50);
+ lineTo(c+50, d+50);
+ }
+ line._visible = 0;
+}
+_root.onMouseDown = function() {
+ qidian_x = _root._xmouse;
+ qidian_y = _root._ymouse;
+ with (line) {
+ _x = qidian_x;
+ _y = qidian_y;
+ _xscale = 0;
+ _yscale = 0;
+ _visible = 1;
+ }
+};
+_root.onMouseMove = function() {
+ endX = _root._xmouse;
+ endY = _root._ymouse;
+ if (_root.line != "_root.line" && key.isdown(16)){
+ if (Math.abs(endX-qidian_x)>Math.abs(endY-qidian_y)){
+ setProperty(_root.line,_xscale, endX-qidian_x);
+ setProperty(_root.line,_yscale, endX-qidian_x);
+ } else {
+  setProperty(_root.line,_xscale, endY-qidian_y);
+ setProperty(_root.line,_yscale, endY-qidian_y);
+ }
+ } else {
+ setProperty(_root.line, _xscale,endX-qidian_x);
+ setProperty(_root.line, _yscale, endY-qidian_y);
+ }
+};
+_root.onMouseUp = function() {
+ if (_root._xmouse-qidian_x != 0) {
+ i++;
+ Objectx = "Copy" add i;
+ duplicateMovieClip(_root.line,Objectx, i);
+ setProperty(Objectx, _x, qidian_x);
+ setProperty(Objectx, _y, qidian_y);
+ _root.i = i;
+ }
+ setProperty(_root.line, _visible, 0);
+};两定点画虚线
+
+代码：
+
+MovieClip.
+prototype.dashTo = function(startPoint,
+ destPoint, dashLength, spaceLength) {
+ var x = destPoint.x-startPoint.x; 
+ var y = destPoint.y-startPoint.y; 
+ var hyp = Math.sqrt((x)*(x)+(y)*(y)); 
+ var units = hyp/(dashLength+spaceLength); 
+ var dashSpaceRatio = dashLength/
+(dashLength+spaceLength); 
+ var dashX = (x/units)*dashSpaceRatio; 
+ var spaceX = (x/units)-dashX; 
+ var dashY = (y/units)*dashSpaceRatio; 
+ var spaceY = (y/units)-dashY; 
+ this.moveTo(startPoint.x, startPoint.y); 
+ while (hyp>0) { 
+ startPoint.x += dashX; 
+ startPoint.y += dashY; 
+ hyp -= dashLength; 
+ if (hyp<0) { 
+ startPoint.x = destPoint.x; 
+ startPoint.y = destPoint.y; 
+ } 
+ this.lineTo(startPoint.x,startPoint.y); 
+ startPoint.x += spaceX; 
+ startPoint.y += spaceY; 
+ this.moveTo(startPoint.x,startPoint.y); 
+ hyp -= spaceLength; 
+ } 
+ this.moveTo(destPoint.x, destPoint.y); 
+}; 
+createEmptyMovieClip("DrawingSpace", 1); 
+with (DrawingSpace) { 
+ lineStyle(0, 0x000000, 100); 
+ dashTo({x:300, y:0}, {x:0, y:400}, 3, 10); 
+}
+//////////////////////////////////////////////////////////
+一、首先创建一个文本文件，用来存储图片信息，这个文件可以通过后台程序（如PHP）来修改生成。 
+　　新建文本文件名为imginfo.txt 
+　　以下是文本内容，是图片名称和描述的序列： 
+
+　　代码:
+
+imgvar=1.png,图片一|2.png,图片二|3.png,图片三|4.png,图片四
+　　二、创建flash文件 
+　　在主场景中分别建立“下一张按钮(btn_next)”“上一张按钮（btn_previous）”以及用来载入图片的空MC（image）和显示图片描述的动态文本框(var=imagetxt). 
+然后在主时间轴第一帧写如以下代码： 
+　　1.载入图片的文本信息文件，然后转换成二维数组。 
+　　代码:
+
+System.useCodepage=true; 
+var lv_img=new LoadVars(); 
+_global.img_array=new Array(); 
+_global.imginfo_array=new Array(); 
+lv_img.onLoad=function(success){ 
+if(success){ 
+trace("载入成功！"); 
+img_array=this.imgvar.split("|"); 
+for(i=0;i<=img_array.length-1;i ){ 
+imginfo_array[i]=img_array[i].split(","); 
+} 
+_root.image.loadMovie(imginfo_array[0][0]); 
+_root.imagetxt=imginfo_array[0][1]; 
+trace(imginfo_array); 
+}else{ 
+trace("信息载入失败！"); 
+} 
+} 
+lv_img.load("imginfo.txt");//载入文本信息文件 
+　　2.加入上一张及下一张按钮的动作 
+　　代码:
+
+var j=0; 
+btn_previous.onPress=function(){ 
+trace(j); 
+if(j<=0){j=img_array.length;} 
+_root.image.loadMovie(imginfo_array[j-1][0]); 
+_root.imagetxt=imginfo_array[j-1][1]; 
+j--; 
+} 
+btn_next.onPress=function(){ 
+//trace(j); 
+if(j>=img_array.length-1){j=-1;} 
+_root.image.loadMovie(imginfo_array[j 1][0]); 
+_root.imagetxt=imginfo_array[j 1][1]; 
+j ; 
+} 
+　　OK,把所有文件放在同一目录，输出后就可以了。

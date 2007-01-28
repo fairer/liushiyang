@@ -16,6 +16,8 @@ MetaNodeTextMouseListener.prototype.onDblClick = function (e) {
         return;
     }
     this.wrapper.getModel().clearSelectedMetaNodeModels();
+    alert("1122");
     this.metaNode.startEdit();
+    
 };
 
