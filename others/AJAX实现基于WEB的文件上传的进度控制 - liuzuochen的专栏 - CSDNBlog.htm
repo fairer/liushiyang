@@ -1,0 +1,1224 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0063)http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx -->
+<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>AJAX实现基于WEB的文件上传的进度控制 - liuzuochen的专栏 - CSDNBlog</TITLE>
+<META content="MSHTML 6.00.3790.2817" name=GENERATOR>
+<META http-equiv=Content-Type content="text/html; charset=utf-8">
+<SCRIPT src="" type=text/javascript></SCRIPT>
+<LINK media=all 
+href="AJAX实现基于WEB的文件上传的进度控制 - liuzuochen的专栏 - CSDNBlog_files/style.css" 
+type=text/css rel=stylesheet><LINK media=print 
+href="AJAX实现基于WEB的文件上传的进度控制 - liuzuochen的专栏 - CSDNBlog_files/print.htm" 
+type=text/css rel=stylesheet><LINK title=RSS 
+href="http://blog.csdn.net/liuzuochen/rss.aspx" type=application/rss+xml 
+rel=alternate>
+<SCRIPT language=javascript>
+    if(!window.attachEvent && window.addEventListener)
+    {
+          Window.prototype.attachEvent = HTMLDocument.prototype.attachEvent=
+          HTMLElement.prototype.attachEvent=function(en, func, cancelBubble)
+          {
+            var cb = cancelBubble ? true : false;
+            this.addEventListener(en.toLowerCase().substr(2), func, cb);
+          };
+    }
+  function scrollPosition()
+    {
+      var L, T, w=window, d=document, dd=d.documentElement;
+      if(w.pageXOffset) L=w.pageXOffset;
+      else if(dd&&dd.scrollLeft) L=dd.scrollLeft;
+      else if(d.body) L=d.body.scrollLeft;
+
+      if(w.pageYOffset) T=w.pageYOffset;
+      else if(dd&&dd.scrollTop) T=dd.scrollTop;
+      else if(d.body) T=d.body.scrollTop;
+
+      return {"left": L, "top": T};
+    }  
+		function CreateWaitElement() 
+		{
+		    var loading = document.getElementById('loading');
+            if (!loading)
+                {
+                var str = "<div id='loading' style='color: #000000; \
+                background-color: #FFFFAF; \
+                padding: 0 3px; font-size: 12px; \
+                font-weight: bold;   height: 30px;   width: 160px; \
+                position: absolute;  border: #cccccc 1px solid;\
+                '>正在处理您的请求...</div>";
+                var s = document.createElement("SPAN");
+                s.innerHTML = str;
+                loading = s.firstChild;
+    			document.body.insertBefore(loading, document.body.firstChild);
+		        }
+		   return loading;  
+		}
+		window.attachEvent("onload", function()
+		{
+		    var loading = CreateWaitElement();
+		   loading.style.display = "none"; 
+		   window.attachEvent("onscroll", function(e)
+		 {
+		    var xy = scrollPosition();
+		   loading.style.top = (xy.top + 10)  +"px";
+		   loading.style.left = (xy.left + document.body.offsetWidth - 200)  +"px";
+		 });   
+		});
+		function Anthem_PreCallBack() {CreateWaitElement().style.display = ""; }
+		function Anthem_PostCallBack() {document.getElementById("loading").style.display="none";}
+		</SCRIPT>
+</HEAD>
+<BODY>
+<SCRIPT language=javascript type=text/javascript>
+	<!--
+		function getObject(objectId)
+		{
+			if(document.getElementById)
+			{
+				return document.getElementById(objectId)
+			}
+			else if(document.all&&document.all(objectId))
+			{
+				return document.all(objectId)
+			}
+			else
+			{
+				return false
+			}
+		}
+		
+		function hideObject(objectId)
+		{
+			var obj=getObject(objectId);
+						
+			if(obj&&obj.style)
+			{
+				obj.style.display="none";					
+				return true
+			}
+			return false
+		}
+		
+		function showObject(objectId)
+		{
+			var obj=getObject(objectId);
+			if(obj&&obj.style)
+			{
+				obj.style.display="";
+				return true
+			}
+			return false
+		}
+		
+		function hideComment(){
+			hideObject("commentForm");
+			hideObject("commentform");
+			return;
+		}
+		
+		function showComment(){
+			return;
+		}
+	//-->
+    </SCRIPT>
+
+<FORM language=javascript id=Form1 name=Form1 
+onsubmit="javascript:return WebForm_OnSubmit();" action=1516522.aspx 
+method=post><INPUT id="&#13;&#10;__VIEWSTATE" type=hidden name=__VIEWSTATE>
+<SCRIPT type=text/javascript>
+//<![CDATA[
+var Anthem_DefaultURL = "1516522.aspx?Anthem_CallBack=true";
+var Anthem_FormID = "Form1";
+//]]>
+</SCRIPT>
+
+<SCRIPT type=text/javascript>
+//<![CDATA[
+// Anthem.js
+// Updated Nov 13, 2006
+
+// Used by encodeURIComponentNew to mimic function encodeURIComponent in 
+// IE 5.5+, Netscape 6+, and Mozilla
+function utf8(wide) {
+  var c, s;
+  var enc = "";
+  var i = 0;
+  while(i<wide.length) {
+    c= wide.charCodeAt(i++);
+    // handle UTF-16 surrogates
+    if (c>=0xDC00 && c<0xE000) continue;
+    if (c>=0xD800 && c<0xDC00) {
+      if (i>=wide.length) continue;
+      s= wide.charCodeAt(i++);
+      if (s<0xDC00 || c>=0xDE00) continue;
+      c= ((c-0xD800)<<10)+(s-0xDC00)+0x10000;
+    }
+    // output value
+    if (c<0x80) enc += String.fromCharCode(c);
+    else if (c<0x800) enc += String.fromCharCode(0xC0+(c>>6),0x80+(c&0x3F));
+    else if (c<0x10000) enc += String.fromCharCode(0xE0+(c>>12),0x80+(c>>6&0x3F),0x80+(c&0x3F));
+    else enc += String.fromCharCode(0xF0+(c>>18),0x80+(c>>12&0x3F),0x80+(c>>6&0x3F),0x80+(c&0x3F));
+  }
+  return enc;
+}
+
+var hexchars = "0123456789ABCDEF";
+
+function toHex(n) {
+  return hexchars.charAt(n>>4)+hexchars.charAt(n & 0xF);
+}
+
+var okURIchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-";
+
+// Mimics function encodeURIComponent in IE 5.5+, Netscape 6+, and Mozilla
+function encodeURIComponentNew(s) {
+  var s = utf8(s);
+  var c;
+  var enc = "";
+  for (var i= 0; i<s.length; i++) {
+    if (okURIchars.indexOf(s.charAt(i))==-1)
+      enc += "%"+toHex(s.charCodeAt(i));
+    else
+      enc += s.charAt(i);
+  }
+  return enc;
+}
+
+function Anthem_Encode(s){
+	if (typeof encodeURIComponent == "function") {
+		// Use JavaScript built-in function
+		// IE 5.5+ and Netscape 6+ and Mozilla
+		return encodeURIComponent(s);
+	} else {
+		// Need to mimic the JavaScript version
+		// Netscape 4 and IE 4 and IE 5.0
+		return encodeURIComponentNew(s);
+	}
+}
+
+// Primarily used by Anthem.Manager to add an onsubmit event handler
+// when validators are added to a page during a callback.
+function Anthem_AddEvent(control, eventType, functionPrefix) {
+    var ev;
+    eval("ev = control." + eventType + ";");
+    if (typeof(ev) == "function") {
+        ev = ev.toString();
+        ev = ev.substring(ev.indexOf("{") + 1, ev.lastIndexOf("}"));
+    }
+    else {
+        ev = "";
+    }
+    var func;
+    if (navigator.appName.toLowerCase().indexOf('explorer') > -1) {
+        func = new Function(functionPrefix + " " + ev);
+    }
+    else {
+        func = new Function("event", functionPrefix + " " + ev);
+    }
+    eval("control." + eventType + " = func;");
+}
+
+function Anthem_GetXMLHttpRequest() {
+	if (window.XMLHttpRequest) {
+		return new XMLHttpRequest();
+	} else {
+		if (window.Anthem_XMLHttpRequestProgID) {
+			return new ActiveXObject(window.Anthem_XMLHttpRequestProgID);
+		} else {
+			var progIDs = ["Msxml2.XMLHTTP.5.0", "Msxml2.XMLHTTP.4.0", "MSXML2.XMLHTTP.3.0", "MSXML2.XMLHTTP", "Microsoft.XMLHTTP"];
+			for (var i = 0; i < progIDs.length; ++i) {
+				var progID = progIDs[i];
+				try {
+					var x = new ActiveXObject(progID);
+					window.Anthem_XMLHttpRequestProgID = progID;
+					return x;
+				} catch (e) {
+				}
+			}
+		}
+	}
+	return null;
+}
+
+function Anthem_CallBack(url, target, id, method, args, clientCallBack, clientCallBackArg, includeControlValuesWithCallBack, updatePageAfterCallBack) {
+	if (window.Anthem_PreCallBack) {
+		var preCallBackResult = Anthem_PreCallBack();
+		if (!(typeof preCallBackResult == "undefined" || preCallBackResult)) {
+			if (window.Anthem_CallBackCancelled) {
+				Anthem_CallBackCancelled();
+			}
+			return null;
+		}
+	}
+	var x = Anthem_GetXMLHttpRequest();
+	var result = null;
+	if (!x) {
+		result = { "value": null, "error": "NOXMLHTTP" };
+		Anthem_DebugError(result.error);
+		if (window.Anthem_Error) {
+			Anthem_Error(result);
+		}
+		if (clientCallBack) {
+			clientCallBack(result, clientCallBackArg);
+		}
+		return result;
+	}
+	x.open("POST", url ? url : Anthem_DefaultURL, clientCallBack ? true : false);
+	x.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+	x.setRequestHeader("Accept-Encoding", "gzip, deflate");
+	if (clientCallBack) {
+		x.onreadystatechange = function() {
+			if (x.readyState != 4) {
+				return;
+			}
+			Anthem_DebugResponseText(x.responseText);
+			result = Anthem_GetResult(x);
+			if (result.error) {
+				Anthem_DebugError(result.error);
+				if (window.Anthem_Error) {
+					Anthem_Error(result);
+				}
+			}
+			if (updatePageAfterCallBack) {
+				Anthem_UpdatePage(result);
+			}
+			Anthem_EvalClientSideScript(result);
+			clientCallBack(result, clientCallBackArg);
+			x = null;
+			if (window.Anthem_PostCallBack) {
+				Anthem_PostCallBack();
+			}
+		}
+	}
+    var encodedData = "";
+    if (target == "Page") {
+        encodedData += "&Anthem_PageMethod=" + method;
+    } else if (target == "MasterPage") {
+        encodedData += "&Anthem_MasterPageMethod=" + method;
+    } else if (target == "Control") {
+        encodedData += "&Anthem_ControlID=" + id.split(":").join("_");
+        encodedData += "&Anthem_ControlMethod=" + method;
+    }
+	if (args) {
+		for (var argsIndex = 0; argsIndex < args.length; ++argsIndex) {
+			if (args[argsIndex] instanceof Array) {
+				for (var i = 0; i < args[argsIndex].length; ++i) {
+					encodedData += "&Anthem_CallBackArgument" + argsIndex + "=" + Anthem_Encode(args[argsIndex][i]);
+				}
+			} else {
+				encodedData += "&Anthem_CallBackArgument" + argsIndex + "=" + Anthem_Encode(args[argsIndex]);
+			}
+		}
+	}
+	if (updatePageAfterCallBack) {
+		encodedData += "&Anthem_UpdatePage=true";
+	}
+	if (includeControlValuesWithCallBack) {
+		var form = document.getElementById(Anthem_FormID);
+		if (form != null) {
+			for (var elementIndex = 0; elementIndex < form.length; ++elementIndex) {
+				var element = form.elements[elementIndex];
+				if (element.name) {
+					var elementValue = null;
+					if (element.nodeName.toUpperCase() == "INPUT") {
+						var inputType = element.getAttribute("type").toUpperCase();
+						if (inputType == "TEXT" || inputType == "PASSWORD" || inputType == "HIDDEN") {
+							elementValue = element.value;
+						} else if (inputType == "CHECKBOX" || inputType == "RADIO") {
+							if (element.checked) {
+								elementValue = element.value;
+							}
+						}
+					} else if (element.nodeName.toUpperCase() == "SELECT") {
+						if (element.multiple) {
+							elementValue = [];
+							for (var i = 0; i < element.length; ++i) {
+								if (element.options[i].selected) {
+									elementValue.push(element.options[i].value);
+								}
+							}
+						} else if (element.length == 0) {
+						    elementValue = null;
+						} else {
+							elementValue = element.value;
+						}
+					} else if (element.nodeName.toUpperCase() == "TEXTAREA") {
+						elementValue = element.value;
+					}
+					if (elementValue instanceof Array) {
+						for (var i = 0; i < elementValue.length; ++i) {
+							encodedData += "&" + element.name + "=" + Anthem_Encode(elementValue[i]);
+						}
+					} else if (elementValue != null) {
+						encodedData += "&" + element.name + "=" + Anthem_Encode(elementValue);
+					}
+				}
+			}
+			// ASP.NET 1.1 won't fire any events if neither of the following
+			// two parameters are not in the request so make sure they're
+			// always in the request.
+			if (typeof form.__VIEWSTATE == "undefined") {
+				encodedData += "&__VIEWSTATE=";
+			}
+			if (typeof form.__EVENTTARGET == "undefined") {
+				encodedData += "&__EVENTTARGET=";
+			}
+		}
+	}
+	if (encodedData.length > 0) {
+	    encodedData = encodedData.substring(1);
+	}
+	Anthem_DebugRequestText(encodedData.split("&").join("\n&"));
+	x.send(encodedData);
+	if (!clientCallBack) {
+		Anthem_DebugResponseText(x.responseText);
+		result = Anthem_GetResult(x);
+		if (result.error) {
+			Anthem_DebugError(result.error);
+			if (window.Anthem_Error) {
+				Anthem_Error(result);
+			}
+		}
+		if (updatePageAfterCallBack) {
+			Anthem_UpdatePage(result);
+		}
+		Anthem_EvalClientSideScript(result);
+		if (window.Anthem_PostCallBack) {
+			Anthem_PostCallBack();
+		}
+	}
+	return result;
+}
+
+function Anthem_GetResult(x) {
+	var result = { "value": null, "error": null };
+	var responseText = x.responseText;
+	try {
+		result = eval("(" + responseText + ")");
+	} catch (e) {
+		if (responseText.length == 0) {
+			result.error = "NORESPONSE";
+		} else {
+			result.error = "BADRESPONSE";
+			result.responseText = responseText;
+		}
+	}
+	return result;
+}
+
+function Anthem_SetHiddenInputValue(form, name, value) {
+    var input = null;
+    if (form[name]) {
+        input = form[name];
+    } else {
+        input = document.createElement("input");
+        input.setAttribute("name", name);
+        input.setAttribute("type", "hidden");
+    }
+    input.setAttribute("value", value);
+    var parentElement = input.parentElement ? input.parentElement : input.parentNode;
+    if (parentElement == null) {
+        form.appendChild(input);
+        form[name] = input;
+    }
+}
+
+function Anthem_RemoveHiddenInput(form, name) {
+    var input = form[name];
+    if (input != null && typeof(input) != "undefined") {
+      var parentElement = input.parentElement ? input.parentElement : input.parentNode;
+      if (parentElement != null) {
+          form[name] = null;
+          parentElement.removeChild(input);
+      }
+    }
+}
+
+function Anthem_FireEvent(eventTarget, eventArgument, clientCallBack, clientCallBackArg, includeControlValuesWithCallBack, updatePageAfterCallBack) {
+	var form = document.getElementById(Anthem_FormID);
+	Anthem_SetHiddenInputValue(form, "__EVENTTARGET", eventTarget);
+	Anthem_SetHiddenInputValue(form, "__EVENTARGUMENT", eventArgument);
+	Anthem_CallBack(null, null, null, null, null, clientCallBack, clientCallBackArg, includeControlValuesWithCallBack, updatePageAfterCallBack);
+	form.__EVENTTARGET.value = "";
+	form.__EVENTARGUMENT.value = "";
+}
+
+function Anthem_UpdatePage(result) {
+	var form = document.getElementById(Anthem_FormID);
+	if (result.viewState) {
+		Anthem_SetHiddenInputValue(form, "__VIEWSTATE", result.viewState);
+	}
+	if (result.viewStateEncrypted) {
+		Anthem_SetHiddenInputValue(form, "__VIEWSTATEENCRYPTED", result.viewStateEncrypted);
+	}
+	if (result.eventValidation) {
+		Anthem_SetHiddenInputValue(form, "__EVENTVALIDATION", result.eventValidation);
+	}
+	if (result.controls) {
+		for (var controlID in result.controls) {
+			var containerID = "Anthem_" + controlID.split("$").join("_") + "__";
+			var control = document.getElementById(containerID);
+			if (control) {
+				control.innerHTML = result.controls[controlID];
+				if (result.controls[controlID] == "") {
+					control.style.display = "none";
+				} else {
+					control.style.display = "";
+				}
+			}
+		}
+	}
+	if (result.pagescript) {
+	    Anthem_LoadPageScript(result, 0);
+	}
+}
+
+// Load each script in order and wait for each one to load before proceeding
+function Anthem_LoadPageScript(result, index) {
+    if (index < result.pagescript.length) {
+		try {
+		    var script = document.createElement('script');
+		    script.type = 'text/javascript';
+		    if (result.pagescript[index].indexOf('src=') == 0) {
+		        script.src = result.pagescript[index].substring(4);
+		    } else {
+		        if (script.canHaveChildren ) {
+		            script.appendChild(document.createTextNode(result.pagescript[index]));
+		        } else {
+		            script.text = result.pagescript[index];
+		        }
+		    }
+		    var heads = document.getElementsByTagName('head');
+		    if (heads != null && typeof(heads) != "undefined" && heads.length > 0) {
+		        var head = heads[0];
+
+		        // The order that scripts appear is important since later scripts can
+		        // redefine a function. Therefore it is important to add every script
+		        // to the page and in the same order that they were added on the server.
+		        // On the other hand, if we just keep adding scripts the DOM will grow
+		        // unnecessarily. This code scans the <head> element block and removes 
+		        // previous instances of the identical script.
+		        var found = false;
+		        for (var child = 0; child < head.childNodes.length; child++) {
+		            var control = head.childNodes[child];
+		            if (control.tagName.toUpperCase() == "SCRIPT") {
+		                if (script.src.length > 0) {
+		                    if (script.src == control.src) {
+		                        found = true;
+		                        break;
+		                    }
+		                } else if (script.innerHTML.length > 0) {
+		                    if (script.innerHTML == control.innerHTML) {
+		                        found = true;
+		                        break;
+		                    }
+		                }
+		            }
+		        }
+		        if (found) {
+		            head.removeChild(control);
+		        }
+		        
+		        // Now we append the new script and move on to the next script.
+		        // Note that this is a recursive function. It stops when the
+		        // index grows larger than the number of scripts.
+                document.getElementsByTagName('head')[0].appendChild(script);
+                if (typeof script.readyState != "undefined") {
+                    script.onreadystatechange = function() {
+                        if (script.readyState != "complete" && script.readyState != "loaded") {
+                            return;
+                        } else {
+                            Anthem_LoadPageScript(result, index + 1);
+                        }
+                    }
+                } else {
+                    Anthem_LoadPageScript(result, index + 1);
+                }
+	        }
+		} catch (e) {
+		    Anthem_DebugError("Error adding page script to head. " + e.name + ": " + e.message);
+		}
+	}
+}
+
+function Anthem_EvalClientSideScript(result) {
+	if (result.script) {
+		for (var i = 0; i < result.script.length; ++i) {
+			try {
+				eval(result.script[i]);
+			} catch (e) {
+				alert("Error evaluating client-side script!\n\nScript: " + result.script[i] + "\n\nException: " + e);
+			}
+		}
+	}
+}
+
+function Anthem_DebugRequestText(text) {
+}
+
+function Anthem_DebugResponseText(text) {
+}
+
+function Anthem_DebugError(text) {
+}
+
+//Fix for bug #1429412, "Reponse callback returns previous response after file push".
+//see http://sourceforge.net/tracker/index.php?func=detail&aid=1429412&group_id=151897&atid=782464
+function Anthem_Clear__EVENTTARGET() {
+	var form = document.getElementById(Anthem_FormID);
+	Anthem_SetHiddenInputValue(form, "__EVENTTARGET", "");
+}
+
+function Anthem_InvokePageMethod(methodName, args, clientCallBack, clientCallBackArg) {
+	Anthem_Clear__EVENTTARGET(); // fix for bug #1429412
+    return Anthem_CallBack(null, "Page", null, methodName, args, clientCallBack, clientCallBackArg, true, true);
+}
+
+function Anthem_InvokeMasterPageMethod(methodName, args, clientCallBack, clientCallBackArg) {
+	Anthem_Clear__EVENTTARGET(); // fix for bug #1429412
+    return Anthem_CallBack(null, "MasterPage", null, methodName, args, clientCallBack, clientCallBackArg, true, true);
+}
+
+function Anthem_InvokeControlMethod(id, methodName, args, clientCallBack, clientCallBackArg) {
+	Anthem_Clear__EVENTTARGET(); // fix for bug #1429412
+    return Anthem_CallBack(null, "Control", id, methodName, args, clientCallBack, clientCallBackArg, true, true);
+}
+
+function Anthem_PreProcessCallBack(
+    control,
+    e,
+    eventTarget,
+    causesValidation, 
+    validationGroup, 
+    imageUrlDuringCallBack, 
+    textDuringCallBack, 
+    enabledDuringCallBack,
+    preCallBackFunction,
+    callBackCancelledFunction,
+    preProcessOut
+) {
+	preProcessOut.Enabled = !control.disabled;
+	var preCallBackResult = true;
+	if (preCallBackFunction) {
+		preCallBackResult = preCallBackFunction(control);
+	}
+	if (typeof(preCallBackResult) == "undefined" || preCallBackResult) {
+		var valid = true;
+		if (causesValidation && typeof(Page_ClientValidate) == "function") {
+			valid = Page_ClientValidate(validationGroup);
+		}
+		if (typeof(WebForm_OnSubmit) == "function") {
+		    valid = WebForm_OnSubmit();
+		}
+		if (valid) {
+			var inputType = control.getAttribute("type");
+			inputType = (inputType == null) ? '' : inputType.toUpperCase();
+			if (inputType == "IMAGE" && e != null) {
+                var form = document.getElementById(Anthem_FormID);
+                if (e.offsetX) {
+                    Anthem_SetHiddenInputValue(form, eventTarget + ".x", e.offsetX);
+                    Anthem_SetHiddenInputValue(form, eventTarget + ".y", e.offsetY);
+                } else {
+                    Anthem_SetHiddenInputValue(form, eventTarget + ".x", e.clientX - control.offsetLeft + 1);
+                    Anthem_SetHiddenInputValue(form, eventTarget + ".y", e.clientY - control.offsetTop + 1);
+                }
+			}
+			if (imageUrlDuringCallBack || textDuringCallBack) {
+			    if (control.nodeName.toUpperCase() == "INPUT") {
+			        if (inputType == "CHECKBOX" || inputType == "RADIO" || inputType == "TEXT") {
+			            preProcessOut.OriginalText = GetLabelText(control.id);
+			            SetLabelText(control.id, textDuringCallBack);
+			        } else if (inputType == "IMAGE") {
+			            if (imageUrlDuringCallBack) {
+			                preProcessOut.OriginalText = control.src;
+			                control.src = imageUrlDuringCallBack;
+			            } else {
+			                preProcessOut.ParentElement = control.parentElement ? control.parentElement : control.parentNode;
+			                if (preProcessOut.ParentElement) {
+			                    preProcessOut.OriginalText = preProcessOut.ParentElement.innerHTML;
+			                    preProcessOut.ParentElement.innerHTML = textDuringCallBack;
+			                }
+			            }
+			        } else if (inputType == "SUBMIT") {
+			            preProcessOut.OriginalText = control.value;
+			            control.value = textDuringCallBack;
+			        }
+			    } else if (control.nodeName.toUpperCase() == "SELECT") {
+			        preProcessOut.OriginalText = GetLabelText(control.id);
+			        SetLabelText(control.id, textDuringCallBack);
+			    } else {
+			        preProcessOut.OriginalText = control.innerHTML;
+				    control.innerHTML = textDuringCallBack;
+				}
+			}
+			control.disabled = (typeof enabledDuringCallBack == "undefined") ? false : !enabledDuringCallBack;
+			return true;
+        } else {
+            return false;
+        }
+	} else {
+	    if (callBackCancelledFunction) {
+		    callBackCancelledFunction(control);
+		}
+		return false;
+	}
+}
+
+function Anthem_PreProcessCallBackOut() {
+    // Fields
+    this.ParentElement = null;
+    this.OriginalText = '';
+    this.Enabled = true;
+}
+
+function Anthem_PostProcessCallBack(
+    result, 
+    control,
+    eventTarget, 
+    clientCallBack, 
+    clientCallBackArg, 
+    imageUrlDuringCallBack, 
+    textDuringCallBack, 
+    postCallBackFunction, 
+    preProcessOut
+) {
+    if (postCallBackFunction) {
+        postCallBackFunction(control);
+    }
+	control.disabled = !preProcessOut.Enabled;
+    var inputType = control.getAttribute("type");
+    inputType = (inputType == null) ? '' : inputType.toUpperCase();
+	if (inputType == "IMAGE") {
+	    var form = document.getElementById(Anthem_FormID);
+        Anthem_RemoveHiddenInput(form, eventTarget + ".x");
+        Anthem_RemoveHiddenInput(form, eventTarget + ".y");
+	}
+	if (imageUrlDuringCallBack || textDuringCallBack) {
+	    if (control.nodeName.toUpperCase() == "INPUT") {
+	        if (inputType == "CHECKBOX" || inputType == "RADIO" || inputType == "TEXT") {
+	            SetLabelText(control.id, preProcessOut.OriginalText);
+	        } else if (inputType == "IMAGE") {
+	            if (imageUrlDuringCallBack) {
+	                control.src = preProcessOut.OriginalText;
+	            } else {
+	                preProcessOut.ParentElement.innerHTML = preProcessOut.OriginalText;
+	            }
+	        } else if (inputType == "SUBMIT") {
+	            control.value = preProcessOut.OriginalText;
+	        }
+	    } else if (control.nodeName.toUpperCase() == "SELECT") {
+	        SetLabelText(control.id, preProcessOut.OriginalText);
+	    } else {
+	        control.innerHTML = preProcessOut.OriginalText;
+	    }
+	}
+	if (clientCallBack) {
+	    clientCallBack(result, clientCallBackArg);
+	}
+}
+
+function Anthem_FireCallBackEvent(
+	control,
+	e,
+	eventTarget,
+	eventArgument,
+	causesValidation,
+	validationGroup,
+	imageUrlDuringCallBack,
+	textDuringCallBack,
+	enabledDuringCallBack,
+	preCallBackFunction,
+	postCallBackFunction,
+	callBackCancelledFunction,
+	includeControlValuesWithCallBack,
+	updatePageAfterCallBack
+) {
+	var preProcessOut = new Anthem_PreProcessCallBackOut();
+	var preProcessResult = Anthem_PreProcessCallBack(
+	    control, 
+	    e, 
+	    eventTarget,
+	    causesValidation, 
+	    validationGroup, 
+	    imageUrlDuringCallBack, 
+	    textDuringCallBack, 
+	    enabledDuringCallBack, 
+	    preCallBackFunction, 
+	    callBackCancelledFunction, 
+	    preProcessOut
+	);
+    if (preProcessResult) {
+	    Anthem_FireEvent(
+		    eventTarget,
+		    eventArgument,
+		    function(result) {
+                Anthem_PostProcessCallBack(
+                    result, 
+                    control, 
+                    eventTarget,
+                    null, 
+                    null, 
+                    imageUrlDuringCallBack, 
+                    textDuringCallBack, 
+                    postCallBackFunction, 
+                    preProcessOut
+                );
+		    },
+		    null,
+		    includeControlValuesWithCallBack,
+		    updatePageAfterCallBack
+	    );
+    }
+}
+
+function AnthemListControl_OnClick(
+    e,
+	causesValidation,
+	validationGroup,
+	textDuringCallBack,
+	enabledDuringCallBack,
+	preCallBackFunction,
+	postCallBackFunction,
+	callBackCancelledFunction,
+	includeControlValuesWithCallBack,
+	updatePageAfterCallBack
+) {
+	var target = e.target || e.srcElement;
+	if (target.nodeName.toUpperCase() == "LABEL" && target.htmlFor != '')
+	    return;
+	var eventTarget = target.id.split("_").join("$");
+	Anthem_FireCallBackEvent(
+	    target, 
+	    e,
+	    eventTarget, 
+	    '', 
+	    causesValidation, 
+	    validationGroup, 
+	    '',
+	    textDuringCallBack, 
+	    enabledDuringCallBack, 
+	    preCallBackFunction, 
+	    postCallBackFunction, 
+	    callBackCancelledFunction, 
+	    true, 
+	    true
+	);
+}
+
+function GetLabelText(id) {
+    var labels = document.getElementsByTagName('label');
+    for (var i = 0; i < labels.length; i++) {
+        if (labels[i].htmlFor == id) {
+            return labels[i].innerHTML;
+        }
+    }
+    return null;
+}
+
+function SetLabelText(id, text) {
+    var labels = document.getElementsByTagName('label');
+    for (var i = 0; i < labels.length; i++) {
+        if (labels[i].htmlFor == id) {
+            labels[i].innerHTML = text;
+            return;
+        }
+    }
+}
+
+//]]>
+</SCRIPT>
+
+<SCRIPT 
+src="AJAX实现基于WEB的文件上传的进度控制 - liuzuochen的专栏 - CSDNBlog_files/WebResource.axd" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT type=text/javascript>
+<!--
+function WebForm_OnSubmit() {
+if (typeof(ValidatorOnSubmit) == "function" && ValidatorOnSubmit() == false) return false;
+return true;
+}
+// -->
+</SCRIPT>
+ 
+<DIV id=top>
+<DIV>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TD class=HeaderTitles>
+      <H1><A class=headermaintitle id=Header1_HeaderTitle 
+      href="http://blog.csdn.net/liuzuochen/">liuzuochen的专栏</A></H1>
+      <P id=tagline></P></TD></TR></TBODY></TABLE></DIV>
+<DIV class=HeaderBar>
+<TABLE class=HeaderBar id=HeaderBar>
+  <TBODY>
+  <TR>
+    <TD class=HeaderBarTab noWrap>&nbsp; <A href="http://www.csdn.net/" 
+      target=_blank>CSDN</A>&nbsp;|&nbsp; <A href="http://community.csdn.net/" 
+      target=_blank>社区</A>&nbsp;|&nbsp; <A href="http://dev.csdn.net/" 
+      target=_blank>技术中心</A>&nbsp;|&nbsp; <A id=Header1_MyLinks1_HomeLink 
+      title=到聚合站点 href="http://blog.csdn.net/" 
+      target=_blank>BLOG首页</A>&nbsp;|&nbsp; <A id=Header1_MyLinks1_PersonalHome 
+      title="访问 liuzuochen的专栏" href="http://blog.csdn.net/liuzuochen/" 
+      target=_blank>我的首页</A>&nbsp;|&nbsp; <A id=Header1_MyLinks1_PersonalResume 
+      href="http://job.csdn.net/resumes/liuzuochen.aspx">个人档案</A>&nbsp;|&nbsp; 
+      <A id=Header1_MyLinks1_ContactLink accessKey=9 
+      href="http://blog.csdn.net/liuzuochen/contact.aspx">联系作者</A>&nbsp;|&nbsp; 
+      <A id=Header1_MyLinks1_Syndication 
+      href="http://blog.csdn.net/liuzuochen/Rss.aspx">聚合</A> <A class=XMLLink 
+      id=Header1_MyLinks1_XMLLink 
+      href="http://blog.csdn.net/liuzuochen/Rss.aspx"><IMG 
+      src="AJAX实现基于WEB的文件上传的进度控制 - liuzuochen的专栏 - CSDNBlog_files/xml.gif" 
+      border=0></A>&nbsp;|&nbsp; <A id=Header1_MyLinks1_HyperLink1 
+      href="http://search.csdn.net/search_blog.asp" 
+      target=_blank>搜索</A>&nbsp;|&nbsp; <A id=Header1_MyLinks1_Admin 
+      href="http://writeblog.csdn.net/">登录</A> <IMG id=Header1_BlueTab 
+      src="AJAX实现基于WEB的文件上传的进度控制 - liuzuochen的专栏 - CSDNBlog_files/BlueTabRight.jpg" 
+      align=absMiddle border=0> </TD>
+    <TD class=HeaderBarTabBack noWrap width="100%">
+      <DIV class=BlogStatsBar>
+      <TABLE class=BlogStatsBar>
+        <TBODY>
+        <TR>
+          <TD width="100%"></TD>
+          <TD class=BlogStatsBar noWrap>&nbsp; 1篇原创: 0篇翻译: 0篇转载: 1067次点击: 
+            1个评论: 0个Trackbacks 
+</TD></TR></TBODY></TABLE></DIV></TD></TR></TBODY></TABLE></DIV></DIV>
+<DIV id=leftmenu>
+<H3 class=listtitle>文章</H3>
+<UL class=list></UL>
+<H3 class=listtitle>收藏</H3>
+<UL class=list></UL>
+<H3 class=listtitle>相册</H3><!--category title-->
+<UL class=list>
+  <LI class=listitem><A 
+  href="http://blog.csdn.net/liuzuochen/Gallery/280560.aspx">运行界面</A></LI></UL>
+<H3 class=listtitle>存档</H3>
+<UL class=list>
+  <LI><A 
+  href="http://blog.csdn.net/liuzuochen/archive/2007/02.aspx">2007年02月(1)</A></LI></UL><SPAN 
+id=Anthem_RecentComments_ltlComments__><SPAN 
+id=RecentComments_ltlComments></SPAN></SPAN><BR><BR></DIV>
+<DIV id=main>
+<DIV class=Tag>
+<SCRIPT language=javascript 
+src="AJAX实现基于WEB的文件上传的进度控制 - liuzuochen的专栏 - CSDNBlog_files/urltag.aspx"></SCRIPT>
+
+<DIV style="CLEAR: both"></DIV></DIV>
+<SCRIPT>function StorePage(){d=document;t=d.selection?(d.selection.type!='None'?d.selection.createRange().text:''):(d.getSelection?d.getSelection():'');void(keyit=window.open('http://www.365key.com/storeit.aspx?t='+escape(d.title)+'&u='+escape(d.location.href)+'&c='+escape(t),'keyit','scrollbars=no,width=475,height=575,left=75,top=20,status=no,resizable=yes'));keyit.focus();}</SCRIPT>
+
+<DIV class=post>
+<DIV class=postTitle><A 
+href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/"><IMG height=13 
+src="AJAX实现基于WEB的文件上传的进度控制 - liuzuochen的专栏 - CSDNBlog_files/authorship.gif" 
+width=15 border=0>&nbsp;AJAX实现基于WEB的文件上传的进度控制</A> </DIV>
+<DIV class=postText>
+<STYLE type=text/css>BODY {
+	MARGIN: 15px; FONT: 13px Georgia, "Lucida Grande", Arial, sans-serif; COLOR: #000; LETTER-SPACING: 0.01em; BACKGROUND-COLOR: white
+}
+PRE.programlisting {
+	PADDING-RIGHT: 6px; PADDING-LEFT: 6px; FONT-SIZE: small; PADDING-BOTTOM: 6px; PADDING-TOP: 6px; FONT-FAMILY: Courier New, monospace; BACKGROUND-COLOR: #f4f4f4
+}
+</STYLE>
+<A id=d0 name=d0></A>
+<DIV class=toc>
+<DL>
+  <DT>1. <A 
+  href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d1">引言</A> 
+
+  <DT>2. <A 
+  href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d2">实现代码</A> 
+
+  <DD>
+  <DL>
+    <DT>2.1. <A 
+    href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d201">服务器端代码</A> 
+
+    <DD>
+    <DL>
+      <DT>2.1.1. <A 
+      href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d20101">文件上传状态类（FileUploadStatus）</A> 
+
+      <DT>2.1.2. <A 
+      href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d20102">文件上传状态侦听类（FileUploadListener）</A> 
+
+      <DT>2.1.3. <A 
+      href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d20103">后台服务类（BackGroundService）</A> 
+
+      <DT>2.1.4. <A 
+      href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d20104">文件上传状态控制类（BeanControler）</A> 
+      </DT></DL>
+    <DT>2.2. <A 
+    href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d202">客户端代码</A> 
+
+    <DD>
+    <DL>
+      <DT>2.2.1. <A 
+      href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d20201">AjaxWrapper.js</A> 
+
+      <DT>2.2.2. <A 
+      href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d20202">fileUpload.html</A> 
+
+      <DT>2.2.3. <A 
+      href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d20203">result.jsp</A> 
+
+      <DT>2.2.4. <A 
+      href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d20204">fileUpload.css</A> 
+      </DT></DL>
+    <DT>2.3. <A 
+    href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d203">配置文件</A> 
+    </DT></DL>
+  <DT>3. <A 
+  href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d3">结语</A> 
+  </DT></DL></DIV>
+<DIV>
+<DIV>
+<H2 class=title><A id=d1 name=d1></A>&nbsp;1.&nbsp;引言</H2></DIV></DIV>
+<DIV><A 
+href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d0">返回</A></DIV>
+<DIV></DIV>
+<P>　　 基于浏览器的文件上传，特别是对于通过&lt;input 
+type="file"&gt;标签来实现上传的情况，<BR>存在着严重的性能问题，因为用户提交了文件之后，在浏览器把文件上传到服务器的过程中，界面看上去<BR>似乎是静止的，如果是小文件还好些，如果不幸需要上传的是几兆、几十兆甚至上百兆的文件，我相信那是<BR>一种非常痛苦的体验，我们中间的很多人应该都有过此种不堪的经历。（一笑）</P>
+<P>　　现在我就针对这个问题给出一个解决方案，我们将实现一个具有监控能力的WEB上传的程序——它不仅<BR>把文件上传到服务器，而且"实时地"监视文件上传的实际过程。</P>
+<P>解决方案的基本思路是这样的：<BR><BR></P>
+<UL>
+  <LI>　　在Form提交上传文件同时，使用AJAX周期性地从Servlet轮询上传状态信息 
+  <LI>　　然后，根据此信息更新进度条和相关文字，及时反映文件传输状态 
+  <LI>　　如果用户取消上传操作，则进行相应的现场清理工作：删除已经上传的文件，在Form提交页面中显示相关信息 
+  <LI>　　如果上传完毕，显示已经上传的文件内容(或链接) </LI></UL>
+<P>在介绍源代码之前，我们先来看看程序运行界面：<BR><IMG alt="" 
+src="AJAX实现基于WEB的文件上传的进度控制 - liuzuochen的专栏 - CSDNBlog_files/o_pic.jpg"> </P>
+<DIV>
+<DIV>
+<H2 class=title><A id=d2 name=d2></A>&nbsp;2.&nbsp;实现代码</H2></DIV></DIV>
+<DIV><A 
+href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d0">返回</A></DIV>
+<DIV></DIV>
+<P>　　 实现代码想当然的有服务器端代码和客户端代码（呵呵），我们先从服务器端开始。</P>
+<DIV>
+<DIV>
+<H2 class=title style="CLEAR: both"><A id=d201 
+name=d201></A>&nbsp;2.1.&nbsp;服务器端代码</H2></DIV></DIV>
+<DIV>
+<DIV>
+<H3 class=title><A 
+name=d20101></A>&nbsp;&nbsp;2.1.1.&nbsp;文件上传状态类（FileUploadStatus）</H3></DIV>
+<DIV><A 
+href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d0">返回</A></DIV></DIV>
+<P>　　 
+使用FileUploadStatus这个类记录文件上传状态，并将其作为服务器端与web客户端之间通信的媒介，通过对这个类对象提供上传状态作为服务器回应发送给web客户端，web客户端使用JavaScript获得文件上传状态。源代码如下：</P><PRE class=programlisting>	        /**<BR> 	 * 本例程演示了通过Web上传文件过程中的进度显示。您可以对本例程进行任何修改和使用。<BR>	 *<BR>	 * 如需要转载，请注明作者。<BR>	 *<BR>	 * 作者： 刘作晨<BR>	 * <BR>	 */<BR>	package liuzuochen.sample.upload;<BR>		import java.util.*;<BR>		public class FileUploadStatus {<BR>		//上传用户地址<BR>		private String uploadAddr;<BR>		//上传总量<BR>		private long uploadTotalSize = 0;<BR>		//读取上传总量<BR>		private long readTotalSize = 0;<BR>		//当前上传文件号<BR>		private int currentUploadFileNum = 0;<BR>		//成功读取上传文件数<BR>		private int successUploadFileCount = 0;<BR>		//状态<BR>		private String status = "";<BR>		//处理起始时间<BR>		private long processStartTime = 0l;<BR>		//处理终止时间<BR>		private long processEndTime = 0l;<BR>		//处理执行时间<BR>		private long processRunningTime = 0l;<BR>		//上传文件URL列表<BR>		private List uploadFileUrlList = new ArrayList();<BR>		//取消上传<BR>		private boolean cancel = false;<BR>		//上传base目录<BR>		private String baseDir = "";<BR>	<BR>		public FileUploadStatus() {<BR>	<BR>		}<BR>	<BR>		public String getBaseDir() {<BR>			return baseDir;<BR>		}<BR>	<BR>		public void setBaseDir(String baseDir) {<BR>			this.baseDir = baseDir;<BR>		}<BR>	<BR>		public boolean getCancel() {<BR>			return cancel;<BR>		}<BR>	<BR>		public void setCancel(boolean cancel) {<BR>			this.cancel = cancel;<BR>		}<BR>	<BR>		public List getUploadFileUrlList() {<BR>			return uploadFileUrlList;<BR>		}<BR>	<BR>		public void setUploadFileUrlList(List uploadFileUrlList) <BR>{			this.uploadFileUrlList = uploadFileUrlList;<BR>		}<BR>	<BR>		public long getProcessRunningTime() {<BR>			return processRunningTime;<BR>		}<BR>	<BR>		public void setProcessRunningTime(long <BR>processRunningTime) {<BR>			this.processRunningTime = processRunningTime;<BR>		}<BR>	<BR>		public long getProcessEndTime() {<BR>			return processEndTime;<BR>		}<BR>	<BR>		public void setProcessEndTime(long processEndTime) {<BR>			this.processEndTime = processEndTime;<BR>		}<BR>	<BR>		public long getProcessStartTime() {<BR>			return processStartTime;<BR>		}<BR>	<BR>		public void setProcessStartTime(long processStartTime) {<BR>			this.processStartTime = processStartTime;<BR>		}<BR>	<BR>		public long getReadTotalSize() {<BR>			return readTotalSize;<BR>		}<BR>	<BR>		public void setReadTotalSize(long readTotalSize) {<BR>			this.readTotalSize = readTotalSize;<BR>		}<BR>	<BR>		public int getSuccessUploadFileCount() {<BR>			return successUploadFileCount;<BR>		}<BR>	<BR>		public void setSuccessUploadFileCount(int <BR>successUploadFileCount) {<BR>			this.successUploadFileCount = <BR>successUploadFileCount;<BR>		}<BR>	<BR>		public int getCurrentUploadFileNum() {<BR>			return currentUploadFileNum;<BR>		}<BR>	<BR>		public void setCurrentUploadFileNum(int <BR>currentUploadFileNum) {<BR>			this.currentUploadFileNum = currentUploadFileNum;<BR>		}<BR>	<BR>		public String getStatus() {<BR>			return status;<BR>		}<BR>	<BR>		public void setStatus(String status) {<BR>			this.status = status;<BR>		}<BR>	<BR>		public long getUploadTotalSize() {<BR>			return uploadTotalSize;<BR>		}<BR>	<BR>		public String getUploadAddr() {<BR>			return uploadAddr;<BR>		}<BR>	<BR>		public void setUploadTotalSize(long uploadTotalSize) {<BR>			this.uploadTotalSize = uploadTotalSize;<BR>		}<BR>	<BR>		public void setUploadAddr(String uploadAddr) {<BR>			this.uploadAddr = uploadAddr;<BR>		}<BR>	<BR>		public String toJSon() {<BR>			StringBuffer strJSon = new StringBuffer();<BR>			strJSon.append("<BR>{UploadTotalSize:").append(getUploadTotalSize()).append(<BR>					",")<BR>					.append<BR>("ReadTotalSize:").append(getReadTotalSize()).append<BR>(",")<BR>					.append<BR>("CurrentUploadFileNum:").append(getCurrentUploadFileNum()).<BR>					append(",")<BR>					.append<BR>("SuccessUploadFileCount:").append(<BR>						<BR>	getSuccessUploadFileCount()).append(",")					.append<BR>("Status:'").append(getStatus()).append("',")					.append<BR>("ProcessStartTime:").append(getProcessStartTime()).					append(",")<BR>					.append("ProcessEndTime:").append(getProcessEndTime()).append(							",")<BR>					.append("ProcessRunningTime:").append(getProcessRunningTime()).<BR>					append(",")					.append("Cancel:").append(getCancel()).append("}");<BR>			return strJSon.toString();<BR>	<BR>		}<BR>			}<BR>		</PRE>
+<DIV>
+<DIV>
+<H3 class=title><A 
+name=d20102></A>&nbsp;&nbsp;2.1.2.&nbsp;文件上传状态侦听类（FileUploadListener）</H3></DIV>
+<DIV><A 
+href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d0">返回</A></DIV></DIV>
+<P>　　 使用Common-FileUpload 1.2版本(20070103)。此版本提供了能够监视文件上传情况的 
+ProcessListener接口，<BR>使开发者通过FileUploadBase类对象的setProcessListener方法植入自己的Listener。<BR>FileUploadListener类实现了ProcessListener，在整个文件上传过程中，它对上传进度进行监控，<BR>并且根据上传 
+情况实时的更新上传状态Bean。源代码如下：</P><PRE class=programlisting> 	/**<BR>	 * 本例程演示了通过Web上传文件过程中的进度显示。您可以对本例程进行任何修改和使用。<BR>	 *<BR>	 * 如需要转载，请注明作者。<BR>	 *<BR>	 * 作者： 刘作晨<BR>	 * <BR>	 */<BR>	package liuzuochen.sample.upload;<BR>	<BR>	import org.apache.commons.fileupload.ProgressListener;<BR>	import javax.servlet.http.HttpServletRequest;<BR>	<BR>	public class FileUploadListener implements ProgressListener{<BR>		private HttpServletRequest request=null;<BR>	<BR>	<BR>	public FileUploadListener(HttpServletRequest request){	<BR>		this.request=request;	<BR>	}	<BR>	<BR>	/**	<BR>	 * 更新状态	<BR>	 */	<BR>	public void update(long pBytesRead, long pContentLength, int pItems){	<BR>		FileUploadStatus statusBean= BackGroundService.getStatusBean(request);	<BR>		statusBean.setUploadTotalSize(pContentLength);	<BR>		//读取完成	<BR>		if (pContentLength == -1) {	<BR>		   statusBean.setStatus("完成对" + pItems +"个文件的读取:读取了 " + pBytesRead + " bytes.");	<BR>		   statusBean.setReadTotalSize(pBytesRead);	<BR>		   statusBean.setSuccessUploadFileCount(pItems);	<BR>		   statusBean.setProcessEndTime(System.currentTimeMillis());	<BR>		   statusBean.setProcessRunningTime(statusBean.getProcessEndTime());	<BR>		//读取中	<BR>		} else {	<BR>		   statusBean.setStatus("当前正在处理第" + pItems +"个文件:已经读取了 " + pBytesRead + " / " + pContentLength+ " bytes.");	<BR>		   statusBean.setReadTotalSize(pBytesRead);	<BR>		   statusBean.setCurrentUploadFileNum(pItems);	<BR>		   statusBean.setProcessRunningTime(System.currentTimeMillis());	<BR>		}	<BR>			BackGroundService.saveStatusBean(request,statusBean);	<BR>	}<BR>	}		</PRE>
+<DIV>
+<DIV>
+<H3 class=title><A 
+name=d20103></A>&nbsp;&nbsp;2.1.3.&nbsp;后台服务类（BackGroundService）</H3></DIV>
+<DIV><A 
+href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d0">返回</A></DIV></DIV>
+<P>　　 BackGroundService这个Servlet类负责接收Form Post数据、回应状态轮询请求、处理取消文件上传的请求。 
+<BR>尽管可以把这些功能相互分离开来，但为了简单明了，还是将它们放到Servlet中，只是由不同的方法进行分割。<BR>源代码如下：</P><PRE class=programlisting> 	 <BR>	/**<BR>	 * 本例程演示了通过Web上传文件过程中的进度显示。您可以对本例程进行任何修改和使用。<BR>	 *<BR>	 * 如需要转载，请注明作者。<BR>	 *<BR>	 * 作者： 刘作晨<BR>	 * <BR>	 */	<BR>	package liuzuochen.sample.upload;<BR>	<BR>	import java.io.File;<BR>	import java.io.IOException;<BR>	import java.util.List;<BR>	<BR>	<BR>	import javax.servlet.ServletException;<BR>	import javax.servlet.http.HttpServletRequest;<BR>	import javax.servlet.http.HttpServletResponse;<BR>	<BR>	import org.apache.commons.fileupload.FileItem;<BR>	import org.apache.commons.fileupload.FileUploadException;<BR>	import org.apache.commons.fileupload.disk.DiskFileItemFactory;<BR>	import org.apache.commons.fileupload.servlet.*;<BR>	<BR>	<BR>	public class BackGroundService extends javax.servlet.http.HttpServlet implements			javax.servlet.Servlet {<BR>	<BR>		public static final String UPLOAD_DIR = "/upload";<BR>		public static final String DEFAULT_UPLOAD_FAILURE_URL = "./result.jsp";<BR>	<BR>		public BackGroundService() {<BR>			super();<BR>		}<BR>	<BR>	<BR>		protected void doGet(HttpServletRequest request,							 HttpServletResponse response) throws ServletException,				IOException {<BR>			doPost(request, response);<BR>		}	<BR>		/**<BR>		 * 从文件路径中取出文件名<BR>		 */<BR>		private String takeOutFileName(String filePath) {<BR>			int pos = filePath.lastIndexOf(File.separator);<BR>			if (pos &gt; 0) {<BR>				return filePath.substring(pos + 1);<BR>			} else {<BR>				return filePath;<BR>			}<BR>		}<BR>	<BR>		/**<BR>		 * 从request中取出FileUploadStatus Bean<BR>		 */<BR>		public static FileUploadStatus getStatusBean(<BR>				HttpServletRequest request) {<BR>			BeanControler beanCtrl = BeanControler.getInstance();<BR>			return beanCtrl.getUploadStatus(request.getRemoteAddr());<BR>		}	<BR>		/**<BR>		 * 把FileUploadStatus Bean保存到类控制器BeanControler<BR>		 */<BR>		public static void saveStatusBean(				HttpServletRequest request,				FileUploadStatus statusBean) {<BR>			statusBean.setUploadAddr(request.getRemoteAddr());<BR>			BeanControler beanCtrl = BeanControler.getInstance();<BR>			beanCtrl.setUploadStatus(statusBean);<BR>		}<BR>	<BR>		/**<BR>		 * 删除已经上传的文件<BR>		 */<BR>		private void deleteUploadedFile(HttpServletRequest request) {<BR>			FileUploadStatus satusBean = getStatusBean(request);<BR>			for (int i = 0; i &lt; satusBean.getUploadFileUrlList().size(); i++) {<BR>				File uploadedFile = new File(request.getRealPath(UPLOAD_DIR) +											 File.separator +											 satusBean.getUploadFileUrlList().											 get(i));<BR>				uploadedFile.delete();<BR>			}<BR>			satusBean.getUploadFileUrlList().clear();<BR>			satusBean.setStatus("删除已上传的文件");<BR>			saveStatusBean(request, satusBean);<BR>		}<BR>	<BR>		/**<BR>		 * 上传过程中出错处理<BR>		 */<BR>		private void uploadExceptionHandle(				HttpServletRequest request,				String errMsg) throws ServletException, IOException {<BR>			//首先删除已经上传的文件<BR>			deleteUploadedFile(request);<BR>			FileUploadStatus satusBean = getStatusBean(request);<BR>			satusBean.setStatus(errMsg);<BR>			saveStatusBean(request, satusBean);<BR>		}<BR>	<BR>		/**<BR>		 * 初始化文件上传状态Bean<BR>		 */<BR>		private FileUploadStatus initStatusBean(HttpServletRequest<BR>				request) {<BR>			FileUploadStatus satusBean = new FileUploadStatus();<BR>			satusBean.setStatus("正在准备处理");<BR>			satusBean.setUploadTotalSize(request.getContentLength());<BR>			satusBean.setProcessStartTime(System.currentTimeMillis());<BR>			satusBean.setBaseDir(request.getContextPath() + UPLOAD_DIR);<BR>			return satusBean;<BR>		}<BR>	<BR>		/**<BR>		 * 处理文件上传<BR>		 */<BR>		private void processFileUpload(HttpServletRequest request,<BR>								<BR>	   HttpServletResponse response) throws				ServletException, IOException {<BR>			DiskFileItemFactory factory = new DiskFileItemFactory();<BR>			//设置内存缓冲区，超过后写入临时文件<BR>			factory.setSizeThreshold(10240000);<BR>			//设置临时文件存储位置<BR>			factory.setRepository(new File(request.getRealPath("/upload/temp")));<BR>			ServletFileUpload upload = new ServletFileUpload(factory);<BR>			//设置单个文件的最大上传值<BR>			upload.setFileSizeMax(102400000);<BR>			//设置整个request的最大值<BR>			upload.setSizeMax(102400000);<BR>			upload.setProgressListener(new FileUploadListener(request));<BR>			//保存初始化后的FileUploadStatus Bean<BR>			saveStatusBean(request, initStatusBean(request));<BR>	<BR>			String forwardURL = "";<BR>			try {<BR>				List items = upload.parseRequest(request);<BR>				//获得返回url<BR>				for (int i = 0; i &lt; items.size(); i++) {<BR>					FileItem item = (FileItem) items.get(i);<BR>					if (item.isFormField()) {<BR>						forwardURL = item.getString();<BR>						break;<BR>					}<BR>				}<BR>				//处理文件上传<BR>				for (int i = 0; i &lt; items.size(); i++) {<BR>					FileItem item = (FileItem) items.get(i);<BR>	<BR>					//取消上传<BR>					if (getStatusBean(request).getCancel()) {<BR>						deleteUploadedFile(request);<BR>						break;<BR>					}<BR>					//保存文件<BR>					else if (!item.isFormField() &amp;&amp; item.getName().length() &gt; 0) {<BR>						String fileName = takeOutFileName(item.getName());<BR>						File uploadedFile = new File(request.getRealPath(UPLOAD_DIR) +<BR>													 File.separator + fileName);						item.write(uploadedFile);						//更新上传文件列表						FileUploadStatus <BR>satusBean =								getStatusBean(request);					<BR>	satusBean.getUploadFileUrlList().add(fileName);<BR>						saveStatusBean(request, satusBean);<BR>						Thread.sleep(500);<BR>					}<BR>				}<BR>	<BR>			} catch (FileUploadException e) {<BR>				uploadExceptionHandle(request, "上传文件时发生错误:" + e.getMessage());<BR>			} catch (Exception e) {<BR>				uploadExceptionHandle(request, "保存上传文件时发生错误:" + e.getMessage());<BR>			}<BR>			if (forwardURL.length() == 0) {<BR>				forwardURL = DEFAULT_UPLOAD_FAILURE_URL;<BR>			}<BR>			request.getRequestDispatcher(forwardURL).forward(request, response);<BR>		}<BR>	<BR>		/**<BR>		 * 回应上传状态查询<BR>		 */<BR>		private void responseStatusQuery(HttpServletRequest request,<BR>									<BR>			  HttpServletResponse response) throws				IOException {<BR>			response.setContentType("text/xml");<BR>			response.setCharacterEncoding("UTF-8");<BR>			response.setHeader("Cache-Control", "no-cache");<BR>			FileUploadStatus satusBean = getStatusBean(request);<BR>			response.getWriter().write(satusBean.toJSon());<BR>		}<BR>	<BR>		/**<BR>		 * 处理取消文件上传<BR>		 */<BR>		private void processCancelFileUpload(HttpServletRequest request,<BR>									<BR>		 HttpServletResponse response) throws				IOException {<BR>			FileUploadStatus satusBean = getStatusBean(request);<BR>			satusBean.setCancel(true);<BR>			saveStatusBean(request, satusBean);<BR>			responseStatusQuery(request, response);<BR>		}<BR>	<BR>		protected void doPost(HttpServletRequest request,<BR>							  HttpServletResponse response) throws ServletException,				IOException {<BR>			boolean isMultipart = ServletFileUpload.isMultipartContent(request);<BR>			if (isMultipart) {<BR>				processFileUpload(request, response);<BR>			} else {<BR>				request.setCharacterEncoding("UTF-8");<BR>	<BR>				if (request.getParameter("uploadStatus") != null) {<BR>					responseStatusQuery(request, response);<BR>				}<BR>				if (request.getParameter("cancelUpload") != null) {<BR>					processCancelFileUpload(request, response);<BR>				}<BR>	<BR>			}<BR>		}<BR>	}<BR>		</PRE>
+<DIV>
+<DIV>
+<H3 class=title><A 
+name=d20104></A>&nbsp;&nbsp;2.1.4.&nbsp;文件上传状态控制类（BeanControler）</H3></DIV>
+<DIV><A 
+href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d0">返回</A></DIV></DIV>
+<P>　　 这是一个单例类，它的功能是为客户端保存文件上传状态，这里我没有使用Session来存储 
+文件上传状态，<BR>因为对于AJAX这种异步调用，服务器会开启不同的Session，所以无法通过Session保存文件上传状态。<BR>我并不认为这种方法最好，如果有更好的方法，欢迎大家一起讨论。 
+源代码如下：</P><PRE class=programlisting>		<BR>/**<BR>	 * 本例程演示了通过Web上传文件过程中的进度显示。您可以对本例程进行任何修改和使用。<BR>	 *<BR>	 * 如需要转载，请注明作者。<BR>	 *<BR>	 * 作者： 刘作晨<BR>	 * <BR>	 */	  <BR>		package liuzuochen.sample.upload;<BR>		<BR>		import java.util.Vector;<BR>		<BR>		public class BeanControler {<BR>			private static BeanControler beanControler = new BeanControler();<BR>			private Vector vector = new Vector();<BR>			private BeanControler() {<BR>			}<BR>		<BR>			public static BeanControler getInstance() {<BR>				return beanControler;<BR>			}<BR>		<BR>			/**<BR>			 * 取得相应FileUploadStatus类对象的存储位置<BR>			 */<BR>			private int indexOf(String strID) {<BR>				int nReturn = -1;<BR>				for (int i = 0; i &lt; vector.size(); i++) {<BR>					FileUploadStatus status = (FileUploadStatus) vector.elementAt(i);<BR>					if (status.getUploadAddr().equals(strID)) {<BR>						nReturn = i;<BR>						break;<BR>					}<BR>				}<BR>				return nReturn;<BR>			}<BR>			/**<BR>			 * 取得相应FileUploadStatus类对象<BR>			 */<BR>			public FileUploadStatus getUploadStatus(String strID) {<BR>				return (FileUploadStatus) vector.elementAt(indexOf(strID));<BR>			}<BR>			/**<BR>			 * 存储FileUploadStatus类对象<BR>			 */<BR>			public void setUploadStatus(FileUploadStatus status) {<BR>				int nIndex = indexOf(status.getUploadAddr());<BR>				if ( -1 == nIndex) {<BR>					vector.add(status);<BR>				} else {<BR>					vector.insertElementAt(status, nIndex);<BR>					vector.removeElementAt(nIndex + 1);<BR>				}<BR>			}<BR>			/**<BR>			 * 删除FileUploadStatus类对象<BR>			 */<BR>			public void removeUploadStatus(String strID){<BR>				int nIndex = indexOf(strID);<BR>				if(-1!=nIndex)<BR>					vector.removeElementAt(nIndex);<BR>			}<BR>		}	  	  </PRE>
+<DIV>
+<DIV>
+<H2 class=title style="CLEAR: both"><A id=d202 
+name=d202></A>&nbsp;2.2.&nbsp;客户端代码</H2></DIV></DIV>
+<P>　　 客户端我们采用Prototype框架。</P>
+<DIV>
+<DIV>
+<H3 class=title><A 
+name=d20201></A>&nbsp;&nbsp;2.2.1.&nbsp;AjaxWrapper.js</H3></DIV>
+<DIV><A 
+href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d0">返回</A></DIV></DIV>
+<P>　　 AjaxWrapper.js对Prototype进行了封装。 源代码如下：</P><PRE class=programlisting>	<BR>//类工具<BR>	var ClassUtils=Class.create();<BR>	ClassUtils.prototype={<BR>		_ClassUtilsName:'ClassUtils',<BR>		initialize:function(){<BR>		},<BR>		/**<BR>		 * 给类的每个方法注册一个对类对象的自我引用<BR>		 * @param reference 对类对象的引用<BR>		 */<BR>		registerFuncSelfLink:function(reference){<BR>			for (var n in reference) {<BR>				var item = reference[n];                        <BR>				if (item instanceof Function) <BR>					item.$ = reference;<BR>			}<BR>		}<BR>	}<BR>	//Ajax操作封装类：<BR>	//由于调用AjaxRequest类进行XMLHTTPRequest操作时，this引用（指向当前的对象）会出现了call stack问题，从而指向当前的对象。<BR>	//所以，对putRequest、callBackHandler、以及callback方法都要使用arguments.callee.$来获得正确的类对象引用<BR>	var AjaxWrapper=Class.create();<BR>	AjaxWrapper.prototype={<BR>		debug_flag:false,<BR>		xml_source:'',<BR>		/**<BR>		 * 初始化<BR>		 * @param isDebug 是否显示调试信息<BR>		 */<BR>		initialize:function(isDebug){<BR>			new ClassUtils().registerFuncSelfLink(this);<BR>			this.debug_flag=isDebug;<BR>			<BR>		},<BR>		/**<BR>		 * 以get的方式向server发送request<BR>		 * @param url<BR>		 * @param params<BR>		 * @param callBackFunction 发送成功后回调的函数或者函数名<BR>		 */<BR>		putRequest:function(url,params,callBackFunction){<BR>			var funcHolder=arguments.callee.$;<BR>			var xmlHttp = new Ajax.Request(url,<BR>				{<BR>					method: 'get', <BR>					parameters: params, <BR>					requestHeaders:['my-header-encoding','utf-8'],<BR>					onFailure: function(){<BR>						alert('对不起，网络通讯失败，请重新刷新！');<BR>					},<BR>					onSuccess: function(transport){<BR>					},<BR>					onComplete: function(transport){<BR>						funcHolder.callBackHandler.apply(funcHolder,[transport,callBackFunction]);<BR>					}<BR>				});<BR>		},<BR>		/**<BR>		 * 以post的方式向server发送xml请求<BR>		 * @param url<BR>		 * @param postDataBody<BR>		 * @param callBackFunction 发送成功后回调的函数或者函数名<BR>		 */<BR>		pushRequest:function(url,postDataBody,callBackFunction){<BR>			var funcHolder=arguments.callee.$;<BR>			var options={<BR>					method: 'post', <BR>					parameters:'',<BR>					requestHeaders:['my-header-encoding','utf-8'],<BR>					postBody: postDataBody,<BR>					onFailure: function(transport){<BR>						alert('对不起，网络通讯失败，请重新发送！');<BR>					},<BR>					onComplete: function(transport){<BR>						funcHolder.callBackHandler.apply(funcHolder,[transport,callBackFunction]);<BR>					}<BR>				};<BR>			var xmlHttp = new Ajax.Request(url,options);<BR>		},<BR>		/**<BR>		 * 远程调用的回调处理<BR>		 * @param transport xmlhttp的transport<BR>		 * @param callBackFunction 回调时call的方法，可以是函数也可以是函数名<BR>		 */<BR>		callBackHandler:function(transport,callBackFunction){<BR>			var funcHolder=arguments.callee.$;<BR>			if(transport.status!=200){<BR>				alert("获得回应失败,请求状态:"+transport.status);<BR>			}<BR>			else{<BR>				funcHolder.xml_source=transport.responseText;<BR>				if (funcHolder.debug_flag)<BR>					alert('call callback function');<BR>				if (typeof(callBackFunction)=='function'){<BR>					if (funcHolder.debug_flag){<BR>						alert('invoke callbackFunc');<BR>					}<BR>					callBackFunction(transport.responseText);<BR>				}<BR>				else{<BR>					if (funcHolder.debug_flag){<BR>						alert('evalFunc callbackFunc');<BR>					}<BR>					new execute().evalFunc(callBackFunction,transport.responseText);<BR>				}<BR>				if (funcHolder.debug_flag)<BR>					alert('end callback function');<BR>			}<BR>		},<BR>		//显示xml信息<BR>		showXMLResponse:function(){<BR>			var funcHolder=arguments.callee.$;<BR>			alert(funcHolder.xml_source);<BR>		}<BR>	}<BR>	<BR>	var XMLDomForAjax=Class.create();<BR>	XMLDomForAjax.prototype={<BR>		isDebug:false,<BR>		//dom节点类型常量<BR>		ELEMENT_NODE:1,<BR>		ATTRIBUTE_NODE:2,<BR>		TEXT_NODE:3,<BR>		CDATA_SECTION_NODE:4,<BR>		ENTITY_REFERENCE_NODE:5,<BR>		ENTITY_NODE:6,<BR>		PROCESSING_INSTRUCTION_NODE:7,<BR>		COMMENT_NODE:8,<BR>		DOCUMENT_NODE:9,<BR>		DOCUMENT_TYPE_NODE:10,<BR>		DOCUMENT_FRAGMENT_NODE:11,<BR>		NOTATION_NODE:12,<BR>		<BR>		initialize:function(isDebug){<BR>			new ClassUtils().registerFuncSelfLink(this);<BR>			this.isDebug=isDebug;<BR>		},<BR>		/**<BR>		 * 建立跨平台的dom解析器<BR>		 * @param xml xml字符串<BR>		 * @return dom解析器<BR>		 */<BR>		createDomParser:function(xml){<BR>			// code for IE<BR>			if (window.ActiveXObject){<BR>			  var doc=new ActiveXObject("Microsoft.XMLDOM");<BR>			  doc.async="false";<BR>			  doc.loadXML(xml);<BR>			}<BR>			// code for Mozilla, Firefox, Opera, etc.<BR>			else{<BR>			  var parser=new DOMParser();<BR>			  var doc=parser.parseFromString(xml,"text/xml");<BR>			}<BR>			return doc;<BR>		},<BR>		/**<BR>		 * 反向序列化xml到javascript Bean<BR>		 * @param xml xml字符串<BR>		 * @return javascript Bean<BR>		 */<BR>		deserializedBeanFromXML:function (xml){<BR>			var funcHolder=arguments.callee.$;<BR>			var doc=funcHolder.createDomParser(xml);<BR>			// documentElement总表示文档的root<BR>			var objDomTree=doc.documentElement;<BR>			var obj=new Object();<BR>			for (var i=0; i0){<BR>								objFieldValue[objFieldValue.length]=nodeText;<BR>							}<BR>						}<BR>						else{<BR>							objFieldValue=new Array();<BR>						}<BR>					}<BR>					else if (node.getAttribute('type')=='long' <BR>						|| node.getAttribute('type')=='java.lang.Long'<BR>						|| node.getAttribute('type')=='int'<BR>						|| node.getAttribute('type')=='java.lang.Integer'){						<BR>						objFieldValue=parseInt(nodeText);<BR>					}<BR>					else if (node.getAttribute('type')=='double' <BR>						|| node.getAttribute('type')=='float'<BR>						|| node.getAttribute('type')=='java.lang.Double'<BR>						|| node.getAttribute('type')=='java.lang.Float'){<BR>						<BR>						objFieldValue=parseFloat(nodeText);<BR>					}<BR>					else if (node.getAttribute('type')=='java.lang.String'){<BR>						objFieldValue=nodeText;<BR>					}<BR>					else{<BR>						objFieldValue=nodeText;<BR>					}<BR>					//赋值给对象<BR>					obj[node.getAttribute('name')]=objFieldValue;<BR>					if (funcHolder.isDebug){<BR>						alert(eval('obj.'+node.getAttribute('name')));<BR>					}<BR>				}<BR>				else if (node.nodeType == funcHolder.TEXT_NODE){<BR>					if (funcHolder.isDebug){<BR>						//alert('TEXT_NODE');<BR>					}<BR>					<BR>				}<BR>				else if (node.nodeType == funcHolder.CDATA_SECTION_NODE){<BR>					if (funcHolder.isDebug){<BR>						//alert('CDATA_SECTION_NODE');<BR>					}<BR>				}<BR>			}<BR>			return obj;<BR>		},<BR>		/**<BR>		 * 获得dom节点的text<BR>		 */<BR>		getNodeText:function (node) {<BR>			var funcHolder=arguments.callee.$;<BR>			// is this a text or CDATA node?<BR>			if (node.nodeType == funcHolder.TEXT_NODE || node.nodeType == funcHolder.CDATA_SECTION_NODE) {<BR>				return node.data;<BR>			}<BR>			var i;<BR>			var returnValue = [];<BR>			for (i = 0; i &lt; node.childNodes.length; i++) {<BR>				//采用递归算法<BR>				returnValue.push(funcHolder.getNodeText(node.childNodes[i]));<BR>			}<BR>			return returnValue.join('');<BR>		}<BR>	}<BR>	<BR>	//委托者类<BR>	var Dispatcher=Class.create();<BR>	Dispatcher.prototype={<BR>		name:'Dispatcher',<BR>		//对class中的每个function都赋值一个值为this的$属性<BR>		initialize:function(){<BR>			new ClassUtils().registerFuncSelfLink(this);<BR>		},<BR>		/**<BR>		 * 委托调用<BR>		 * @param caller 调用者，func的拥有者<BR>		 * @param func 如果是function对象，则使用Dispatcher对象自己的name作为参数；否则直接调用func<BR>		 */<BR>		dispatch:function(caller,func){<BR>			if (func instanceof Function){<BR>				var funcArguments=new Array();<BR>				funcArguments[0]=arguments.callee.$.name;<BR>				func.apply(caller,funcArguments);<BR>			}<BR>			else{<BR>				eval(func);<BR>			}<BR>		}<BR>	}<BR>	//祈祷者类<BR>	var Invoker=Class.create();<BR>	Invoker.prototype={<BR>		name:'Invoker',<BR>		initialize:function(){<BR>		},<BR>		invoke:function(showMsg){<BR>			alert(showMsg+"——this.name="+this.name);<BR>		}<BR>	}		</PRE>
+<DIV>
+<DIV>
+<H3 class=title><A 
+name=d20202></A>&nbsp;&nbsp;2.2.2.&nbsp;fileUpload.html</H3></DIV>
+<DIV><A 
+href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d0">返回</A></DIV></DIV>
+<P>　　 fileUpload.html是文件上传界面。 源代码如下：</P><PRE class=programlisting><BR>		&lt;html&gt;<BR>		&lt;head&gt;<BR>		&lt;meta http-equiv="Content-Type" content="text/html; charset=GBK"&gt;<BR>		&lt;script type="text/javascript" src="./javascript/prototype.js"&gt;&lt;/script&gt;<BR>		&lt;script type="text/javascript" src="./javascript/AjaxWrapper.js"&gt;&lt;/script&gt;<BR>		&lt;link href="./css/fileUpload.css" type="text/css" rel="stylesheet"/&gt;<BR>		&lt;title&gt;文件上传&lt;/title&gt;<BR>		<BR>		&lt;/head&gt;<BR>		&lt;body&gt;<BR>		&lt;div id="controlPanel"&gt;<BR>			&lt;div id="readme"&gt;测试说明:&nbsp;&nbsp;最大上传量:100M，单个文件最大长度:100M&lt;/div&gt;<BR>			&lt;div id="uploadFileUrl"&gt;&lt;/div&gt;<BR>			<BR>			&lt;form id="fileUploadForm" name="fileUploadForm" action="./BackGroundService.action" <BR>				enctype="multipart/form-data" method="post"&gt;<BR>			&lt;input type="file" name="file" id="file" size="40"/&gt;&lt;br&gt;<BR>			&lt;input type="file" name="file" id="file" size="40"/&gt;&lt;br&gt;<BR>			&lt;input type="file" name="file" id="file" size="40"/&gt;&lt;br&gt;<BR>			&lt;input type="submit" name="uploadButton" id="uploadButton" value="开始上传"/&gt;<BR>			&lt;input type="button" name="cancelUploadButton" id="cancelUploadButton" value="取消上传"/&gt;&lt;br&gt;<BR>			&lt;/form&gt;			<BR>			&lt;div id="progressBar"&gt;<BR>			&lt;div id="theMeter"&gt;<BR>				&lt;div id="progressBarText"&gt;&lt;/div&gt;<BR>					&lt;div id="totalProgressBarBox"&gt;<BR>						&lt;div id="totalProgressBarBoxContent"&gt;&lt;/div&gt;<BR>					&lt;/div&gt;<BR>				&lt;/div&gt;<BR>				&lt;div id="progressStatusText"&gt;&lt;/div&gt;<BR>		   &lt;/div&gt;<BR>		   <BR>		&lt;/div&gt;<BR>		<BR>		<BR>		<BR>		&lt;script&gt;<BR>		Element.hide('progressBar');<BR>		Event.observe('fileUploadForm','submit',startProgress,false);<BR>		Event.observe('cancelUploadButton','click',cancelProgress,false);<BR>		<BR>		//刷新上传状态<BR>		function refreshUploadStatus(){<BR>			var ajaxW = new AjaxWrapper(false);<BR>			ajaxW.putRequest(<BR>				'./BackGroundService.action',<BR>				'uploadStatus=',<BR>				function(responseText){<BR>						eval("uploadInfo = " + responseText);<BR>						var progressPercent = Math.ceil(<BR>							(uploadInfo.ReadTotalSize) / uploadInfo.UploadTotalSize * 100);<BR>			<BR>						$('progressBarText').innerHTML = ' 上传处理进度: '+progressPercent+'% ['+							(uploadInfo.ReadTotalSize)+'/'+uploadInfo.UploadTotalSize + ' bytes]'+<BR>							' 正在处理第'+uploadInfo.CurrentUploadFileNum+'个文件'+<BR>							' 耗时: '+(uploadInfo.ProcessRunningTime-uploadInfo.ProcessStartTime)+' ms';<BR>						$('progressStatusText').innerHTML=' 反馈状态: '+uploadInfo.Status;<BR>						$('totalProgressBarBoxContent').style.width = parseInt(progressPercent * 3.5) + 'px';<BR>				}<BR>			);<BR>		}<BR>		//上传处理<BR>		function startProgress(){<BR>			Element.show('progressBar');<BR>			$('progressBarText').innerHTML = ' 上传处理进度: 0%';<BR>			$('progressStatusText').innerHTML=' 反馈状态:';<BR>			$('uploadButton').disabled = true;<BR>			var periodicalExe=new PeriodicalExecuter(refreshUploadStatus,0.5);<BR>			return true;<BR>		}<BR>		//取消上传处理<BR>		function cancelProgress(){<BR>			$('cancelUploadButton').disabled = true;<BR>			var ajaxW = new AjaxWrapper(false);<BR>			ajaxW.putRequest(<BR>				'./BackGroundService.action',<BR>				'cancelUpload=true',<BR>				//因为form的提交，这可能不会执行<BR>				function(responseText){<BR>					eval("uploadInfo = " + responseText);<BR>					$('progressStatusText').innerHTML=' 反馈状态: '+uploadInfo.status;<BR>					if (msgInfo.cancel=='true'){<BR>						alert('删除成功!');<BR>						window.location.reload();<BR>					};<BR>				}<BR>			);<BR>		}<BR>		&lt;/script&gt;<BR>		&lt;/body&gt;<BR>		&lt;/html&gt;		</PRE>
+<DIV>
+<DIV>
+<H3 class=title><A name=d20203></A>&nbsp;&nbsp;2.2.3.&nbsp;result.jsp</H3></DIV>
+<DIV><A 
+href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d0">返回</A></DIV></DIV>
+<P>　　 result.jsp是文件上传结果显示界面。 源代码如下：</P><PRE class=programlisting>	<BR>	&lt;%@ page language="java" contentType="text/html; charset=GBK"		pageEncoding="GBK"%&gt;<BR>	&lt;%@ page import="liuzuochen.sample.upload.*" %&gt;<BR>	&lt;html&gt;<BR>	&lt;head&gt;<BR>	&lt;meta http-equiv="Content-Type" content="text/html; charset=GBK"&gt;<BR>	&lt;link href="./css/fileUpload.css" type="text/css" rel="stylesheet"/&gt;<BR>	&lt;title&gt;文件上传结果&lt;/title&gt;<BR>	&lt;/head&gt;<BR>	&lt;body&gt;<BR>	&lt;div id="resultPanel"&gt;<BR>		&lt;div&gt;&lt;span&gt;上传文件列表:&lt;/span&gt;&lt;/div&gt;<BR>	&lt;%<BR>		<BR>		FileUploadStatus fUploadStatus=BackGroundService.getStatusBean(request);<BR>	<BR>		for(int i=0;i&lt;fUploadStatus.getUploadFileUrlList().size();i++){<BR>			String fileName=(String)fUploadStatus.getUploadFileUrlList().get(i);<BR>			String url=fUploadStatus.getBaseDir()+"/"+fileName;<BR>		%&gt;<BR>			&lt;div&gt;&lt;a href="&lt;%=url%&gt;"&gt;&lt;%=fileName%&gt;&lt;/a&gt;&lt;/div&gt;<BR>		&lt;%<BR>		}<BR>		if (fUploadStatus.getStatus().indexOf("错误")&gt;=0){<BR>		%&gt;<BR>			&lt;div id='errorArea'&gt;&lt;span&gt;错误信息:&lt;%=fUploadStatus.getStatus() %&gt;&lt;/span&gt;&lt;/div&gt;<BR>		&lt;%	<BR>		}<BR>		else if (fUploadStatus.getCancel()){<BR>		%&gt;<BR>			&lt;div id='normalMessageArea'&gt;&lt;span&gt;由于用户取消上传，所以已经上传的文件均被删除&lt;/span&gt;&lt;/div&gt;<BR>		&lt;%<BR>		}<BR>		BeanControler.getInstance().removeUploadStatus(request.getRemoteAddr());<BR>	<BR>	%&gt;<BR>	&lt;/div&gt;<BR>	&lt;/body&gt;<BR>	&lt;/html&gt;		</PRE>
+<DIV>
+<DIV>
+<H3 class=title><A 
+name=d20204></A>&nbsp;&nbsp;2.2.4.&nbsp;fileUpload.css</H3></DIV>
+<DIV><A 
+href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d0">返回</A></DIV></DIV>
+<P>　　 fileUpload.css是样式文件。 源代码如下：</P><PRE class=programlisting>	<BR>	body {<BR>		color:#000;<BR>		background-color:white;<BR>		font:15px Georgia, "Lucida Grande", Arial, sans-serif; <BR>		letter-spacing:0.01em;<BR>		margin:15px;<BR>	}<BR>	#controlPanel,#resultPanel{<BR>		width:700px;<BR>		margin:20px auto;<BR>		padding:25px;<BR>		border:3px solid gray;<BR>		-moz-border-radius:10px;<BR>		background:#f8f8f8;<BR>	}<BR>	#errorArea{<BR>		width:400px;<BR>		margin:20px auto;<BR>		padding:25px;<BR>		border:3px solid gray;<BR>		-moz-border-radius:10px;<BR>		background:red;<BR>	}<BR>	#normalMessageArea{<BR>		width:400px;<BR>		margin:20px auto;<BR>		padding:25px;<BR>		border:3px solid gray;<BR>		-moz-border-radius:10px;<BR>		background:yellow;<BR>	}<BR>	#progressBar { padding-top: 5px; }<BR>	#totalProgressBarBox { <BR>		width: 350px; <BR>		height: 20px; <BR>		border: 1px inset; <BR>		background: #eee;<BR>	}<BR>	#totalProgressBarBoxContent { <BR>		width: 0; <BR>		height: 20px; <BR>		border-right: 1px solid #444; <BR>		background: #9ACB34; <BR>	}		</PRE>
+<DIV>
+<DIV>
+<H2 class=title style="CLEAR: both"><A id=d203 
+name=d203></A>&nbsp;2.3.&nbsp;配置文件</H2></DIV>
+<DIV><A 
+href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d0">返回</A></DIV></DIV>
+<P>　　 把如下代码加入web.xml中完成Servlet的配置。</P><PRE class=programlisting>	<BR>		&lt;servlet&gt;<BR>			&lt;description&gt;<BR>			&lt;/description&gt;<BR>			&lt;display-name&gt;BackGroundService&lt;/display-name&gt;<BR>			&lt;servlet-name&gt;BackGroundService&lt;/servlet-name&gt;<BR>			&lt;servlet-class&gt;liuzuochen.sample.upload.BackGroundService&lt;/servlet-class&gt;<BR>		&lt;/servlet&gt;<BR>		<BR>		&lt;servlet-mapping&gt;<BR>			&lt;servlet-name&gt;BackGroundService&lt;/servlet-name&gt;<BR>			&lt;url-pattern&gt;*.action&lt;/url-pattern&gt;<BR>		&lt;/servlet-mapping&gt;	  <BR>	  </PRE>
+<DIV>
+<DIV>
+<H2 class=title><A id=d3 name=d3></A>&nbsp;3.&nbsp;结语</H2></DIV></DIV>
+<DIV><A 
+href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#d0">返回</A></DIV>
+<DIV></DIV>
+<P>　　 整个程序到这里就介绍完了，希望它多少能为您的工作或学习带来点儿帮助。<BR>如果您需要程序的全部源代码，请发邮件给我。CSDN无法上传附件。呵呵。 
+<BR>liuzuochen@gmail.com </P><BR><BR>
+<P id=TBPingURL>Trackback: 
+http://tb.blog.csdn.net/TrackBack.aspx?PostId=1516522</P><BR></DIV>
+<DIV class=postFoot>
+<SCRIPT src=""></SCRIPT>
+[<A title=功能强大的网络收藏夹，一秒钟操作就可以轻松实现保存带来的价值、分享带来的快乐 
+href="javascript:d=document;t=d.selection?(d.selection.type!='None'?d.selection.createRange().text:''):(d.getSelection?d.getSelection():'');void(saveit=window.open('http://wz.csdn.net/storeit.aspx?t='+escape(d.title)+'&amp;u='+escape(d.location.href)+'&amp;c='+escape(t),'keyit','scrollbars=no,width=590,height=300,left=75,top=20,status=no,resizable=yes'));saveit.focus();">收藏到我的网摘</A>]&nbsp;&nbsp; 
+liuzuochen发表于 2007年02月28日 10:27:00 </DIV></DIV><LINK 
+href="http://blog.csdn.net/liuzuochen/Services/Pingback.aspx" rel=pingback><!--<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"xmlns:dc="http://purl.org/dc/elements/1.1/"xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"><rdf:Descriptionrdf:about=""dc:identifier=""dc:title="AJAX实现基于WEB的文件上传的进度控制"trackback:ping="http://tb.blog.csdn.net/TrackBack.aspx?PostId=1516522" /></rdf:RDF>-->
+<SCRIPT>function hide(){showComment();}</SCRIPT>
+<BR>
+<DIV class=post>
+<DIV class=postTitle>相关文章：</DIV>
+<UL class=postText>
+  <LI><A href="http://blog.csdn.net/kwklover/archive/2003/10/02/20979.aspx" 
+  target=_blank>利用ASP.NET向服务器上传文件</A> 2003-10-02 <A 
+  href="http://blog.csdn.net/kwklover/" target=_blank>kwklover</A>
+  <LI><A href="http://blog.csdn.net/brainofbaby/archive/2006/07/08/892522.aspx" 
+  target=_blank>外部.js文件和外部.css文件</A> 2006-07-08 <A 
+  href="http://blog.csdn.net/brainofbaby/" target=_blank>brainofbaby</A>
+  <LI><A href="http://blog.csdn.net/mythfish/archive/2005/11/22/534584.aspx" 
+  target=_blank>复习C要点</A> 2005-11-22 <A href="http://blog.csdn.net/mythfish/" 
+  target=_blank>mythfish</A>
+  <LI><A href="http://blog.csdn.net/lcmao/archive/2005/04/28/367272.aspx" 
+  target=_blank>php.exe 的利用</A> 2005-04-28 <A href="http://blog.csdn.net/lcmao/" 
+  target=_blank>lcmao</A>
+  <LI><A href="http://blog.csdn.net/peeaby/archive/2004/10/18/141390.aspx" 
+  target=_blank>SVA(svn vc add-in) 摘要</A> 2004-10-18 <A 
+  href="http://blog.csdn.net/peeaby/" 
+target=_blank>peeaby</A></LI></UL></DIV><BR><BR>
+<DIV class=post id=csdn_zhaig_ad_yahoo></DIV><SPAN 
+id=Anthem_Comments.ascx_ltlComments__><SPAN id=Comments.ascx_ltlComments><BR>
+<DIV id=comments>
+<H3></H3>
+<DIV class=post>
+<DIV class=postTitle><A title="permalink: 回复:AJAX实现基于WEB的文件上传的进度控制" 
+href="http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx#543119">#</A>&nbsp;<A 
+name=543119>&nbsp;</A>iwillsw&nbsp;发表于2007-03-01 12:31:22&nbsp;&nbsp;IP: 
+222.182.37.*</DIV>
+<DIV 
+class=postText>很有用的东西，能发一份源代码给我吗，谢谢！<BR>siriusfx@gmail.com</DIV></DIV><BR></DIV></SPAN></SPAN>
+<SCRIPT language=javascript>
+ad_width=468;
+ad_height=60;
+adcss=2;
+unionuser=19;
+ad_type='j';
+count=5; 
+</SCRIPT>
+
+<SCRIPT language=javascript 
+src="AJAX实现基于WEB的文件上传的进度控制 - liuzuochen的专栏 - CSDNBlog_files/showads.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT language=javascript 
+src="AJAX实现基于WEB的文件上传的进度控制 - liuzuochen的专栏 - CSDNBlog_files/showgm.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT type=text/javascript>document.write("<img src=http://counter.csdn.net/pv.aspx?id=24 border=0 width=0 height=0>");</SCRIPT>
+
+<DIV class=CommentForm id=commentform>
+<H3>发表评论</H3>
+<DIV id=Anthem_PostComment.ascx_UpdatePanel1__>
+<DIV id=PostComment.ascx_UpdatePanel1>
+<TABLE class=CommentForm>
+  <TBODY>
+  <TR>
+    <TD width=69 height=0></TD>
+    <TD></TD></TR>
+  <TR>
+    <TD width=70>大名：</TD>
+    <TD align=left><INPUT id=PostComment.ascx_tbName style="WIDTH: 300px" 
+      disabled maxLength=32 size=40 name=PostComment.ascx:tbName> <SPAN 
+      id=PostComment.ascx_RequiredFieldValidator2 
+      style="DISPLAY: none; COLOR: red" initialvalue="" 
+      evaluationfunction="RequiredFieldValidatorEvaluateIsValid" 
+      display="Dynamic" errormessage="<br>请输入尊姓大名" 
+      controltovalidate="PostComment.ascx_tbName"><BR>请输入尊姓大名</SPAN> </TD></TR>
+  <TR>
+    <TD width=70>网址：</TD>
+    <TD align=left><INPUT id=PostComment.ascx_tbUrl style="WIDTH: 300px" 
+      disabled maxLength=256 size=40 name=PostComment.ascx:tbUrl> </TD></TR>
+  <TR>
+    <TD colSpan=3>评论&nbsp; <SPAN id=PostComment.ascx_RequiredFieldValidator3 
+      style="DISPLAY: none; COLOR: red" initialvalue="" 
+      evaluationfunction="RequiredFieldValidatorEvaluateIsValid" 
+      display="Dynamic" errormessage="<br>请输入评论" 
+      controltovalidate="PostComment.ascx_tbComment"><BR>请输入评论</SPAN> <BR><TEXTAREA id=PostComment.ascx_tbComment style="WIDTH: 381px; HEIGHT: 193px" disabled name=PostComment.ascx:tbComment rows=10 cols=50></TEXTAREA> 
+    </TD></TR>
+  <TR>
+    <TD colSpan=3><SPAN 
+      id=Anthem_PostComment.ascx_btnSubmit__></SPAN>&nbsp;&nbsp;&nbsp; </TD></TR>
+  <TR>
+    <TD colSpan=3><SPAN id=PostComment.ascx_Message 
+      style="COLOR: red">注册用户才能发表评论。如果你没有登录，请点击<A 
+      href="http://passport.csdn.net/member/UserLogin.aspx?from=http://blog.csdn.net/liuzuochen/archive/2007/02/28/1516522.aspx">登录</A></SPAN> 
+    </TD></TR></TBODY></TABLE></DIV></DIV></DIV></DIV>
+<P id=footer>Powered by: <BR><A id=Footer1_Hyperlink2 
+href="http://scottwater.com/blog" name=Hyperlink1><IMG 
+src="AJAX实现基于WEB的文件上传的进度控制 - liuzuochen的专栏 - CSDNBlog_files/100x30_Logo.gif" 
+border=0></A> <A id=Footer1_Hyperlink3 href="http://asp.net/" 
+name=Hyperlink1><IMG 
+src="AJAX实现基于WEB的文件上传的进度控制 - liuzuochen的专栏 - CSDNBlog_files/PoweredByAsp.Net.gif" 
+border=0></A> <BR>Copyright © liuzuochen </P>
+<SCRIPT 
+src="AJAX实现基于WEB的文件上传的进度控制 - liuzuochen的专栏 - CSDNBlog_files/counter.js"></SCRIPT>
+
+<SCRIPT type=text/javascript>
+<!--
+var Page_Validators =  new Array(document.getElementById("PostComment.ascx_RequiredFieldValidator2"), document.getElementById("PostComment.ascx_RequiredFieldValidator3"));
+// -->
+</SCRIPT>
+<INPUT id=__EVENTVALIDATION type=hidden 
+value=/wEWBAL+raDpAgKqtOi0AwLAsuLbDAKi687YCaEdUuRgIvhS8PYPDsd5LslVNRL0 
+name=__EVENTVALIDATION>
+<SCRIPT type=text/javascript>
+<!--
+var Page_ValidationActive = false;
+if (typeof(ValidatorOnLoad) == "function") {
+    ValidatorOnLoad();
+}
+
+function ValidatorOnSubmit() {
+    if (Page_ValidationActive) {
+        return ValidatorCommonOnSubmit();
+    }
+    else {
+        return true;
+    }
+}
+// -->
+</SCRIPT>
+ </FORM>
+<SCRIPT language=javascript type=text/javascript>
+	<!--
+	try{
+		hide();
+		}
+		catch(e){
+		}
+	//-->
+    </SCRIPT>
+</BODY></HTML>
