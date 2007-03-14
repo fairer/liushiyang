@@ -15,6 +15,7 @@ function Component(ui) {
     } else {
         return false;
     }
+    
     this.setClassName("NAME_XIO_UI_FONT");
     this.listenerProxy = new ListenerProxy(this.ui);
 }

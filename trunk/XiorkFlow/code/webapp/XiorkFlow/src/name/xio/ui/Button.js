@@ -8,7 +8,7 @@
 function Button(image, text) {
     this.base = Component;
     this.base(Toolkit.newTable());
-
+	
     //
     this.ui.cellPadding = 0;
     this.ui.cellSpacing = 0;
@@ -16,7 +16,7 @@ function Button(image, text) {
 
     //
     var row = this.ui.insertRow(-1);
-
+this.ui.insertRow
     //
     if (image) {
         var imageIcon = Toolkit.newImage();

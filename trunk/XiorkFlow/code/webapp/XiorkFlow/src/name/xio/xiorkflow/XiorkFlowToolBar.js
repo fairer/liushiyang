@@ -17,6 +17,7 @@ function XiorkFlowToolBar(xiorkFlow) {
 
     //
     this.saveButton = new Button(XiorkFlowWorkSpace.XIORK_FLOW_PATH + "images/xiorkflow/save.gif", "\u4fdd\u5b58");
+    
     //保存
     this.saveButton.setToolTipText("\u4fdd\u5b58");
     this.saveButton.addActionListener(new SaveActionListener(this.xiorkFlow));
