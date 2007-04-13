@@ -67,7 +67,16 @@
 		</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
-
+	<servlet>
+  <servlet-name>com.metaparadigm.jsonrpc.JSONRPCServlet</servlet-name>
+    <servlet-class>com.metaparadigm.jsonrpc.JSONRPCServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>com.metaparadigm.jsonrpc.JSONRPCServlet</servlet-name>
+    <url-pattern>/JSON-RPC</url-pattern>
+  </servlet-mapping>
+  
 	<servlet-mapping>
 		<servlet-name>xiorkflow</servlet-name>
 		<url-pattern>*.xf</url-pattern>
