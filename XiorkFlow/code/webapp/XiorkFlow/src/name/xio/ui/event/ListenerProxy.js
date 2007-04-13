@@ -175,7 +175,7 @@ function ListenerProxy(container, propagation) {
         return this.propagation;
     };
 
-    //
+    // 重写当前控件的默认鼠标方法
     this.container.onclick = _onClick;
     this.container.ondblclick = _onDblClick;
     this.container.onmousedown = _onMouseDown;
@@ -198,7 +198,7 @@ function ListenerProxy(container, propagation) {
 
 //
 /**
- * 当容器被删除时调用，防止内存泄漏。
+ * å½å®¹å¨è¢«å é¤æ¶è°ç¨ï¼é²æ­¢åå­æ³æ¼ã
  */
 ListenerProxy.prototype.clear = function () {
 	//

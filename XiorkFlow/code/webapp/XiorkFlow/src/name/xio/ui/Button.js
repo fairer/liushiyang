@@ -16,7 +16,7 @@ function Button(image, text) {
 
     //
     var row = this.ui.insertRow(-1);
-this.ui.insertRow
+
     //
     if (image) {
         var imageIcon = Toolkit.newImage();
@@ -48,7 +48,7 @@ this.ui.insertRow
         this.txtCell = null;
     }
 
-    //
+    //为按钮增加鼠标方法，默认为按钮的鼠标方法，通过重写方法来写事件代码
     this.addMouseListener(new ButtonMouseListener(this));
 
     //

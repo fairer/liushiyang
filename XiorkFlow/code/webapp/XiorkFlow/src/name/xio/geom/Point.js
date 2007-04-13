@@ -1,5 +1,10 @@
 
 /**
+ *  坐标类 
+ *  属性：x,
+ *       y
+ *  方法：clone 返回一个自身实例
+ * 	     distance 参数 坐标类，返回两点坐标之间的距离
  * <p>Title:  </p>
  * <p>Description: </p>
  * <p>Copyright: Copyright (c) xio.name 2006</p>
@@ -9,6 +14,7 @@ function Point(x, y) {
     this.setX(x);
     this.setY(y);
 }
+
 Point.prototype.clone = function () {
     return new Point(this.x, this.y);
 };

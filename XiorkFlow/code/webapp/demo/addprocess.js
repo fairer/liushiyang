@@ -8,6 +8,9 @@ function init() {
 
     //
     var designerDiv = Toolkit.getElementByID("designer");
+
+//    var designerDiv = Toolkit.newLayer();
+//    designerDiv1.appendChild(designerDiv);
     var xiorkFlow = new XiorkFlow(designerDiv);
     xiorkFlow.setProcessList(window.dialogArguments);
 
