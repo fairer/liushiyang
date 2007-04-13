@@ -24,6 +24,22 @@
 	background: buttonface;
 	border: buttonface 1px solid;
 }
+.NAME_XIO_UI_TREE {
+	height: 18px;
+	cursor: default;
+	padding: 0px;
+	margin: 0px;
+	background: buttonface;
+	border: buttonface 0px solid;
+}
+.NAME_XIO_UI_TREE_OVER {
+	height: 18px;
+	cursor: default;
+	padding: 0px;
+	margin: 0px;
+	background-color: red;
+	border: buttonface 1px solid;
+}
 
 .NAME_XIO_UI_BUTTON_IMGCELL {
 	height: 16px;

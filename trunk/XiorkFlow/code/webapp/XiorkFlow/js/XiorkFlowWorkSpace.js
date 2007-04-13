@@ -58,7 +58,8 @@ XiorkFlowWorkSpace.META_NODE_MIN_HEIGHT = 30;
  */
 XiorkFlowWorkSpace.build = function () {
  	//引入所需要的资源，资源加载顺序不能更改
-
+	//json
+	BuildLibrary.loadJS(XiorkFlowWorkSpace.XIORK_FLOW_PATH + "src/json/jsonrpc.js");
 	//name.xio.util
     BuildLibrary.loadJS(XiorkFlowWorkSpace.XIORK_FLOW_PATH + "src/name/xio/util/Message.js");
     BuildLibrary.loadJS(XiorkFlowWorkSpace.XIORK_FLOW_PATH + "src/name/xio/util/Array.js");
@@ -103,7 +104,11 @@ XiorkFlowWorkSpace.build = function () {
     BuildLibrary.loadJS(XiorkFlowWorkSpace.XIORK_FLOW_PATH + "src/name/xio/ui/ScrollPanel.js");
     BuildLibrary.loadJS(XiorkFlowWorkSpace.XIORK_FLOW_PATH + "src/name/xio/ui/Label.js");
     BuildLibrary.loadJS(XiorkFlowWorkSpace.XIORK_FLOW_PATH + "src/name/xio/ui/Frame.js");
-
+    //// 
+	BuildLibrary.loadJS(XiorkFlowWorkSpace.XIORK_FLOW_PATH + "src/name/xio/ui/TreeNode.js");
+	BuildLibrary.loadJS(XiorkFlowWorkSpace.XIORK_FLOW_PATH + "src/name/xio/ui/TreeItem.js");
+	BuildLibrary.loadJS(XiorkFlowWorkSpace.XIORK_FLOW_PATH + "src/name/xio/ui/CheckBox.js");
+	
 	//name.xio.geom.ui
     BuildLibrary.loadJS(XiorkFlowWorkSpace.XIORK_FLOW_PATH + "src/name/xio/geom/ui/GeometryCanvas.js");
     BuildLibrary.loadJS(XiorkFlowWorkSpace.XIORK_FLOW_PATH + "src/name/xio/geom/ui/LineView.js");
