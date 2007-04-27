@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="gb2312" standalone="no"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN" "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+	<sqlMap resource="com/lsy/spring/dao/sqlmap/Ab01.xml"/>
+	<sqlMap resource="com/lsy/spring/dao/sqlmap/Ac01.xml"/>
+</sqlMapConfig>
