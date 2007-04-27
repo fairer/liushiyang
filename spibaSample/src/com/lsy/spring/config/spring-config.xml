@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="GB2312"?>
+<spring-config> 
+	
+	<services>
+		<serviceConfig module="spring1" resource="com/lsy/spring/config/bean1.xml" desc="Dao"/>
+		<serviceConfig module="spring2" resource="com/lsy/spring/config/bean2.xml" desc="Service"/>	
+
+	</services>
+</spring-config>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+
+<struts-config>
+  <data-sources />
+  <form-beans >
+  <form-bean name="commonActionForm" type="com.lsy.struts.common.BaseForm"/>
+  </form-beans>
+  <global-exceptions />
+  <global-forwards />
+  <action-mappings >
+    <action
+      attribute="commonActionForm"
+      name="commonActionForm"
+      parameter="reqCode"
+      path="/test"
+      scope="request"
+      type="com.lsy.struts.action.TestAction" >
+      <set-property property="param(title)" value="主页"/>
+      <forward name="jspView" path="index.jsp">
+      <set-property property="" value=""/>
+      </forward>
+      </action>
+  </action-mappings>
+
+  
+  <message-resources parameter="com.lsy.struts.ApplicationResources" />
+  <plug-in className="com.lsy.struts.plugin.ServicePlugin">
+	  <set-property property="app" value="businessBean"/>
+	</plug-in>
+</struts-config>
+

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="gb2312" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<!-- The SQL in these maps files has purposely been typed with more verbosity than is actually required.
+ For example, many of the selects could have just used SELECT * FROM... instead of listing all of the columns.
+ This is to demonstrate that even complex SQL can be handled and coded and formatted the way SQL was meant
+ to be (i.e. not a bunch of concatenated strings in a Java class). -->
+
+<sqlMap namespace="ac01domain">
+	<typeAlias alias="ac01domain" type="com.lsy.spring.domain.Ac01Domain"/>
+
+	<select id="getContractAuditedPersons" parameterClass="map" resultClass="ac01domain">
+		SELECT 
+		       a.aac001 as aac001,   
+		       a.aac002 as aac002,   
+		       a.aac003 as aac003,   
+		       a.aac016 as aac016,  
+		       a.aac004 as aac004,   
+		       a.aac005 as aac005,   
+		       a.aac024 as aac024,   
+		       a.aac006 as aac006   
+		  FROM ac01 a, ec09 b
+		 where 1 = 1 
+<![CDATA[  and a.yae420 = '1'   ]]>  
+<![CDATA[  and a.aac001 = b.aac001   ]]> 
+<![CDATA[  and b.yec091 in ('1','3','6','7') ]]>  
+		<isNotEmpty prepend="AND" property="aac001">   
+			a.aac001 = #aac001#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="aac002">   
+			a.aac002 = #aac002#
+		</isNotEmpty>
+		
+	</select>
+
+</sqlMap>

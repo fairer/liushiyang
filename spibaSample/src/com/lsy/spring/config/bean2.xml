@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	
+	<bean id="sqlMapClient_example"
+		class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation">
+			<value>com/lsy/spring/config/SqlMapConfig.xml</value>
+		</property>
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+	<bean id="ab01Dao" class="com.lsy.spring.dao.sqlmap.Ab01DaoSqlMap">
+		<property name="sqlMapClient">
+			<ref local="sqlMapClient_example" />
+		</property>
+	</bean>
+	<bean id="ac01Dao" class="com.lsy.spring.dao.sqlmap.Ac01DaoSqlMap">
+		<property name="sqlMapClient">
+			<ref local="sqlMapClient_example" />
+		</property>
+	</bean>
+	<bean id="ab01Service" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="com.lsy.spring.dao.sqlmap.Ab01Service">
+				<property name="dao">
+					<ref bean="ab01Dao"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+</beans>
