@@ -1,0 +1,3 @@
+		    <isNotEmpty prepend="," property="%childname%">   <!-- %childcomment%    -->
+		       %childname% = #%childname%:%bigchildtype%#             
+		    </isNotEmpty>

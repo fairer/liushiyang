@@ -1,0 +1,1077 @@
+<?xml version="1.0" encoding="gb2312" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<!-- The SQL in these maps files has purposely been typed with more verbosity than is actually required.
+ For example, many of the selects could have just used SELECT * FROM... instead of listing all of the columns.
+ This is to demonstrate that even complex SQL can be handled and coded and formatted the way SQL was meant
+ to be (i.e. not a bunch of concatenated strings in a Java class). -->
+ 
+<sqlMap namespace="Gk_Paydomain"> 
+	<typeAlias alias="Gk_Paydomain" type="com.icitic.nbjhgkzf.datachange.bussiness.bpo.domain.Gk_PayDomain"/>
+
+		<select id="queryGk_PayDomain" parameterClass="map" resultClass="Gk_Paydomain">
+		SELECT 
+		       		       cz_id as cz_id,   <!-- 财政局编号     -->
+		       pay_id as pay_id,   <!-- 申请表主键     -->
+		       voucher_no as voucher_no,   <!-- 到账通知单单号     -->
+		       budget_id as budget_id,   <!-- 指标额度主键     -->
+		       plan_id as plan_id,   <!-- 计划额度主键     -->
+		       pay_bill_id as pay_bill_id,   <!-- 对应支付凭证合单主键     -->
+		       pay_bank_bill_id as pay_bank_bill_id,   <!-- 划款单申请主键     -->
+		       pay_center_bill_id as pay_center_bill_id,   <!-- 汇总清算单主键     -->
+		       pay_acc_bill_id as pay_acc_bill_id,   <!-- 入账通知书单主键     -->
+		       pay_day_bill_id as pay_day_bill_id,   <!-- 日报单主键     -->
+		       pay_detail_bill_id as pay_detail_bill_id,   <!-- 凭证明细记录主键     -->
+		       old_pay_id as old_pay_id,   <!-- 原支付申请主键     -->
+		       set_year as set_year,   <!-- 业务年度     -->
+		       en_disp_code as en_disp_code,   <!-- 预算单位外码     -->
+		       bs_disp_code as bs_disp_code,   <!-- 功能分类外码     -->
+		       bsi_disp_code as bsi_disp_code,   <!-- 经济分类外码     -->
+		       bis_disp_code as bis_disp_code,   <!-- 预算项目外码     -->
+		       bi_disp_code as bi_disp_code,   <!-- 项目分类外码     -->
+		       bp_disp_code as bp_disp_code,   <!-- 指标类型外码     -->
+		       bo_disp_code as bo_disp_code,   <!-- 指标来源外码     -->
+		       pk_disp_code as pk_disp_code,   <!-- 支付类型外码     -->
+		       mk_disp_code as mk_disp_code,   <!-- 资金性质外码     -->
+		       mb_disp_code as mb_disp_code,   <!-- 业务处室外码     -->
+		       bt_disp_code as bt_disp_code,   <!-- 指标流向类型外码     -->
+		       file_disp_code as file_disp_code,   <!-- 文号外码     -->
+		       pay_account_disp_code as pay_account_disp_code,   <!-- 支付账户外码     -->
+		       clear_account_disp_code as clear_account_disp_code,   <!-- 国库清算账户外码     -->
+		       hold1_disp_code as hold1_disp_code,   <!-- 备用1外码     -->
+		       hold2_disp_code as hold2_disp_code,   <!-- 备用2外码     -->
+		       hold3_disp_code as hold3_disp_code,   <!-- 备用3外码     -->
+		       en_name as en_name,   <!-- 预算单位名称     -->
+		       bs_name as bs_name,   <!-- 功能分类名称     -->
+		       bsi_name as bsi_name,   <!-- 经济分类名称     -->
+		       bis_name as bis_name,   <!-- 预算项目名称     -->
+		       bi_name as bi_name,   <!-- 项目类别名称     -->
+		       bp_name as bp_name,   <!-- 指标类型名称     -->
+		       bo_name as bo_name,   <!-- 指标来源名称     -->
+		       pk_name as pk_name,   <!-- 支付类型名称     -->
+		       mk_name as mk_name,   <!-- 资金性质名称     -->
+		       mb_name as mb_name,   <!-- 业务处室名称     -->
+		       bt_name as bt_name,   <!-- 指标流向类型名称     -->
+		       file_name as file_name,   <!-- 新字段40     -->
+		       pay_account_name as pay_account_name,   <!-- 支付账户名称（实拨为预算单位收款账户）     -->
+		       hold1_name as hold1_name,   <!-- 备用1名称     -->
+		       hold2_name as hold2_name,   <!-- 备用2名称     -->
+		       clear_account_name as clear_account_name,   <!-- 国库清算账户名称（实拨为国库拨款账户）     -->
+		       hold3_name as hold3_name,   <!-- 备用3名称     -->
+		       clear_bank_disp_code as clear_bank_disp_code,   <!-- 清算账户银行外码     -->
+		       clear_bank_name as clear_bank_name,   <!-- 清算账户银行名称     -->
+		       pay_bank_disp_code as pay_bank_disp_code,   <!-- 支付账户银行外码     -->
+		       pay_bank_name as pay_bank_name,   <!-- 支付账户银行名称     -->
+		       remark as remark,   <!-- 备注信息     -->
+		       pay_money as pay_money,   <!-- 申请金额     -->
+		       pay_mode_disp_code as pay_mode_disp_code,   <!-- 结算方式外码     -->
+		       pay_mode_name as pay_mode_name,   <!-- 结算名称     -->
+		       pa_disp_code as pa_disp_code,   <!-- 支付调整类型外码     -->
+		       pa_name as pa_name,   <!-- 支付调整类型名     -->
+		       input_date as input_date,   <!-- 录入日期     -->
+		       pay_date as pay_date,   <!-- 支付确认日期     -->
+		       accessory_number as accessory_number,   <!-- 附件张数     -->
+		       summary_disp_code as summary_disp_code,   <!-- 摘要外码     -->
+		       summary_name as summary_name,   <!-- 摘要名称     -->
+		       payee_bank as payee_bank,   <!-- 收款人银行     -->
+		       payee_account as payee_account,   <!-- 收款人银行账号     -->
+		       payee_name as payee_name,   <!-- 收款人名称     -->
+		       is_end as is_end,   <!-- 是否接受凭证回单     -->
+		       is_valid as is_valid,   <!-- 是否有效     -->
+		       confirm_en_code as confirm_en_code,   <!-- 审批单位     -->
+		       pay_en_acc_bill_id as pay_en_acc_bill_id,   <!-- 单位发送授权支付凭证     -->
+		       pf_name as pf_name,   <!-- 支付管理类型     -->
+		       pf_disp_code as pf_disp_code,   <!-- 支付管理类型编码     -->
+		       sm_disp_code as sm_disp_code,   <!-- 用途（指标摘要）外码     -->
+		       sm_name as sm_name,   <!-- 用途（指标摘要）名称     -->
+		       gb_disp_code as gb_disp_code,   <!-- 政府采购标志外码     -->
+		       gb_name as gb_name,   <!-- 政府采购标志名称     -->
+		       saltag_disp_code as saltag_disp_code,   <!-- 工资标志外码     -->
+		       saltag_name as saltag_name,   <!-- 工资标志名称     -->
+		       bk_disp_code as bk_disp_code,   <!-- 支出类型外码     -->
+		       bk_name as bk_name,   <!-- 支出类型名称     -->
+		       inpm_disp_code as inpm_disp_code,   <!-- 收支管理外码     -->
+		       inpm_name as inpm_name,   <!-- 收支管理名称     -->
+		       ff_disp_code as ff_disp_code,   <!-- 专项资金表外码     -->
+		       ff_name as ff_name,   <!-- 专项资金表名称     -->
+		       groupid_disp_code as groupid_disp_code,   <!-- 分组号外码     -->
+		       groupid_name as groupid_name,   <!-- 分组号名称     -->
+		       check_no as check_no,   <!-- 支票号     -->
+		       check_password as check_password,   <!-- 支票密码     -->
+		       clear_date as clear_date,   <!-- 清算日期     -->
+		       pay_type as pay_type,   <!-- 支付令类型     -->
+		       inputdate as inputdate,   <!-- 支付令日期     -->
+		       bank_id as bank_id,   <!-- 代理银行编码     -->
+		       settle_type as settle_type,   <!-- 结算方式编码     -->
+		       iniaid as iniaid,   <!-- 原始编号     -->
+		       isexigence as isexigence,   <!-- 紧急支出标志     -->
+		       gkdm as gkdm,   <!-- 国库代码     -->
+		       bank_num as bank_num,   <!-- 代理银行支付系统行号     -->
+		       acct_type as acct_type,   <!-- 授权支付类型     -->
+		       payback_flag as payback_flag,   <!-- 退回标志     -->
+		       budget_srcid as budget_srcid,   <!-- 指标来源     -->
+		       btype_id as btype_id,   <!-- 指标类型     -->
+		       is_pay as is_pay,   <!-- 支付标志     -->
+		       liq_status as liq_status,   <!-- 与财政清算状态     -->
+		       liq_date as liq_date,   <!-- 与人行清算日期     -->
+		       liq_flag as liq_flag,   <!-- 与人行清算标志     -->
+		       ag_serial as ag_serial,   <!-- 中间业务平台流水号     -->
+		       tx_code as tx_code,   <!-- 交易代码     -->
+		       tx_date as tx_date,   <!-- 交易日期     -->
+		       tx_time as tx_time,   <!-- 交易时间     -->
+		       tx_teller as tx_teller,   <!-- 交易柜员     -->
+		       tx_checker as tx_checker,   <!-- 复核员     -->
+		       prt_times as prt_times,   <!-- 凭证打印次数     -->
+		       send_flag as send_flag,   <!-- 上传标志     -->
+		       note as note,   <!-- 说明     -->
+		       report_flag as report_flag,   <!-- 报表记录生成标志     -->
+
+		  FROM gk_pay a
+		 where 1 = 1
+		 
+		 		<isNotEmpty prepend="AND" property="cz_id">   <!-- 财政局编号      -->
+			a.cz_id = #cz_id#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pay_id">   <!-- 申请表主键      -->
+			a.pay_id = #pay_id#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="voucher_no">   <!-- 到账通知单单号      -->
+			a.voucher_no = #voucher_no#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="budget_id">   <!-- 指标额度主键      -->
+			a.budget_id = #budget_id#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="plan_id">   <!-- 计划额度主键      -->
+			a.plan_id = #plan_id#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pay_bill_id">   <!-- 对应支付凭证合单主键      -->
+			a.pay_bill_id = #pay_bill_id#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pay_bank_bill_id">   <!-- 划款单申请主键      -->
+			a.pay_bank_bill_id = #pay_bank_bill_id#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pay_center_bill_id">   <!-- 汇总清算单主键      -->
+			a.pay_center_bill_id = #pay_center_bill_id#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pay_acc_bill_id">   <!-- 入账通知书单主键      -->
+			a.pay_acc_bill_id = #pay_acc_bill_id#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pay_day_bill_id">   <!-- 日报单主键      -->
+			a.pay_day_bill_id = #pay_day_bill_id#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pay_detail_bill_id">   <!-- 凭证明细记录主键      -->
+			a.pay_detail_bill_id = #pay_detail_bill_id#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="old_pay_id">   <!-- 原支付申请主键      -->
+			a.old_pay_id = #old_pay_id#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="set_year">   <!-- 业务年度      -->
+			a.set_year = #set_year#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="en_disp_code">   <!-- 预算单位外码      -->
+			a.en_disp_code = #en_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="bs_disp_code">   <!-- 功能分类外码      -->
+			a.bs_disp_code = #bs_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="bsi_disp_code">   <!-- 经济分类外码      -->
+			a.bsi_disp_code = #bsi_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="bis_disp_code">   <!-- 预算项目外码      -->
+			a.bis_disp_code = #bis_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="bi_disp_code">   <!-- 项目分类外码      -->
+			a.bi_disp_code = #bi_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="bp_disp_code">   <!-- 指标类型外码      -->
+			a.bp_disp_code = #bp_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="bo_disp_code">   <!-- 指标来源外码      -->
+			a.bo_disp_code = #bo_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pk_disp_code">   <!-- 支付类型外码      -->
+			a.pk_disp_code = #pk_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="mk_disp_code">   <!-- 资金性质外码      -->
+			a.mk_disp_code = #mk_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="mb_disp_code">   <!-- 业务处室外码      -->
+			a.mb_disp_code = #mb_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="bt_disp_code">   <!-- 指标流向类型外码      -->
+			a.bt_disp_code = #bt_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="file_disp_code">   <!-- 文号外码      -->
+			a.file_disp_code = #file_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pay_account_disp_code">   <!-- 支付账户外码      -->
+			a.pay_account_disp_code = #pay_account_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="clear_account_disp_code">   <!-- 国库清算账户外码      -->
+			a.clear_account_disp_code = #clear_account_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="hold1_disp_code">   <!-- 备用1外码      -->
+			a.hold1_disp_code = #hold1_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="hold2_disp_code">   <!-- 备用2外码      -->
+			a.hold2_disp_code = #hold2_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="hold3_disp_code">   <!-- 备用3外码      -->
+			a.hold3_disp_code = #hold3_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="en_name">   <!-- 预算单位名称      -->
+			a.en_name = #en_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="bs_name">   <!-- 功能分类名称      -->
+			a.bs_name = #bs_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="bsi_name">   <!-- 经济分类名称      -->
+			a.bsi_name = #bsi_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="bis_name">   <!-- 预算项目名称      -->
+			a.bis_name = #bis_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="bi_name">   <!-- 项目类别名称      -->
+			a.bi_name = #bi_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="bp_name">   <!-- 指标类型名称      -->
+			a.bp_name = #bp_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="bo_name">   <!-- 指标来源名称      -->
+			a.bo_name = #bo_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pk_name">   <!-- 支付类型名称      -->
+			a.pk_name = #pk_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="mk_name">   <!-- 资金性质名称      -->
+			a.mk_name = #mk_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="mb_name">   <!-- 业务处室名称      -->
+			a.mb_name = #mb_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="bt_name">   <!-- 指标流向类型名称      -->
+			a.bt_name = #bt_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="file_name">   <!-- 新字段40      -->
+			a.file_name = #file_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pay_account_name">   <!-- 支付账户名称（实拨为预算单位收款账户）      -->
+			a.pay_account_name = #pay_account_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="hold1_name">   <!-- 备用1名称      -->
+			a.hold1_name = #hold1_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="hold2_name">   <!-- 备用2名称      -->
+			a.hold2_name = #hold2_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="clear_account_name">   <!-- 国库清算账户名称（实拨为国库拨款账户）      -->
+			a.clear_account_name = #clear_account_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="hold3_name">   <!-- 备用3名称      -->
+			a.hold3_name = #hold3_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="clear_bank_disp_code">   <!-- 清算账户银行外码      -->
+			a.clear_bank_disp_code = #clear_bank_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="clear_bank_name">   <!-- 清算账户银行名称      -->
+			a.clear_bank_name = #clear_bank_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pay_bank_disp_code">   <!-- 支付账户银行外码      -->
+			a.pay_bank_disp_code = #pay_bank_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pay_bank_name">   <!-- 支付账户银行名称      -->
+			a.pay_bank_name = #pay_bank_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="remark">   <!-- 备注信息      -->
+			a.remark = #remark#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pay_money">   <!-- 申请金额      -->
+			a.pay_money = #pay_money#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pay_mode_disp_code">   <!-- 结算方式外码      -->
+			a.pay_mode_disp_code = #pay_mode_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pay_mode_name">   <!-- 结算名称      -->
+			a.pay_mode_name = #pay_mode_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pa_disp_code">   <!-- 支付调整类型外码      -->
+			a.pa_disp_code = #pa_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pa_name">   <!-- 支付调整类型名      -->
+			a.pa_name = #pa_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="input_date">   <!-- 录入日期      -->
+			a.input_date = #input_date#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pay_date">   <!-- 支付确认日期      -->
+			a.pay_date = #pay_date#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="accessory_number">   <!-- 附件张数      -->
+			a.accessory_number = #accessory_number#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="summary_disp_code">   <!-- 摘要外码      -->
+			a.summary_disp_code = #summary_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="summary_name">   <!-- 摘要名称      -->
+			a.summary_name = #summary_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="payee_bank">   <!-- 收款人银行      -->
+			a.payee_bank = #payee_bank#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="payee_account">   <!-- 收款人银行账号      -->
+			a.payee_account = #payee_account#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="payee_name">   <!-- 收款人名称      -->
+			a.payee_name = #payee_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="is_end">   <!-- 是否接受凭证回单      -->
+			a.is_end = #is_end#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="is_valid">   <!-- 是否有效      -->
+			a.is_valid = #is_valid#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="confirm_en_code">   <!-- 审批单位      -->
+			a.confirm_en_code = #confirm_en_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pay_en_acc_bill_id">   <!-- 单位发送授权支付凭证      -->
+			a.pay_en_acc_bill_id = #pay_en_acc_bill_id#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pf_name">   <!-- 支付管理类型      -->
+			a.pf_name = #pf_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pf_disp_code">   <!-- 支付管理类型编码      -->
+			a.pf_disp_code = #pf_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="sm_disp_code">   <!-- 用途（指标摘要）外码      -->
+			a.sm_disp_code = #sm_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="sm_name">   <!-- 用途（指标摘要）名称      -->
+			a.sm_name = #sm_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="gb_disp_code">   <!-- 政府采购标志外码      -->
+			a.gb_disp_code = #gb_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="gb_name">   <!-- 政府采购标志名称      -->
+			a.gb_name = #gb_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="saltag_disp_code">   <!-- 工资标志外码      -->
+			a.saltag_disp_code = #saltag_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="saltag_name">   <!-- 工资标志名称      -->
+			a.saltag_name = #saltag_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="bk_disp_code">   <!-- 支出类型外码      -->
+			a.bk_disp_code = #bk_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="bk_name">   <!-- 支出类型名称      -->
+			a.bk_name = #bk_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="inpm_disp_code">   <!-- 收支管理外码      -->
+			a.inpm_disp_code = #inpm_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="inpm_name">   <!-- 收支管理名称      -->
+			a.inpm_name = #inpm_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="ff_disp_code">   <!-- 专项资金表外码      -->
+			a.ff_disp_code = #ff_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="ff_name">   <!-- 专项资金表名称      -->
+			a.ff_name = #ff_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="groupid_disp_code">   <!-- 分组号外码      -->
+			a.groupid_disp_code = #groupid_disp_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="groupid_name">   <!-- 分组号名称      -->
+			a.groupid_name = #groupid_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="check_no">   <!-- 支票号      -->
+			a.check_no = #check_no#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="check_password">   <!-- 支票密码      -->
+			a.check_password = #check_password#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="clear_date">   <!-- 清算日期      -->
+			a.clear_date = #clear_date#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="pay_type">   <!-- 支付令类型      -->
+			a.pay_type = #pay_type#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="inputdate">   <!-- 支付令日期      -->
+			a.inputdate = #inputdate#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="bank_id">   <!-- 代理银行编码      -->
+			a.bank_id = #bank_id#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="settle_type">   <!-- 结算方式编码      -->
+			a.settle_type = #settle_type#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="iniaid">   <!-- 原始编号      -->
+			a.iniaid = #iniaid#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="isexigence">   <!-- 紧急支出标志      -->
+			a.isexigence = #isexigence#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="gkdm">   <!-- 国库代码      -->
+			a.gkdm = #gkdm#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="bank_num">   <!-- 代理银行支付系统行号      -->
+			a.bank_num = #bank_num#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="acct_type">   <!-- 授权支付类型      -->
+			a.acct_type = #acct_type#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="payback_flag">   <!-- 退回标志      -->
+			a.payback_flag = #payback_flag#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="budget_srcid">   <!-- 指标来源      -->
+			a.budget_srcid = #budget_srcid#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="btype_id">   <!-- 指标类型      -->
+			a.btype_id = #btype_id#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="is_pay">   <!-- 支付标志      -->
+			a.is_pay = #is_pay#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="liq_status">   <!-- 与财政清算状态      -->
+			a.liq_status = #liq_status#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="liq_date">   <!-- 与人行清算日期      -->
+			a.liq_date = #liq_date#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="liq_flag">   <!-- 与人行清算标志      -->
+			a.liq_flag = #liq_flag#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="ag_serial">   <!-- 中间业务平台流水号      -->
+			a.ag_serial = #ag_serial#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="tx_code">   <!-- 交易代码      -->
+			a.tx_code = #tx_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="tx_date">   <!-- 交易日期      -->
+			a.tx_date = #tx_date#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="tx_time">   <!-- 交易时间      -->
+			a.tx_time = #tx_time#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="tx_teller">   <!-- 交易柜员      -->
+			a.tx_teller = #tx_teller#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="tx_checker">   <!-- 复核员      -->
+			a.tx_checker = #tx_checker#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="prt_times">   <!-- 凭证打印次数      -->
+			a.prt_times = #prt_times#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="send_flag">   <!-- 上传标志      -->
+			a.send_flag = #send_flag#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="note">   <!-- 说明      -->
+			a.note = #note#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="report_flag">   <!-- 报表记录生成标志      -->
+			a.report_flag = #report_flag#
+		</isNotEmpty>
+
+		
+	</select>
+
+	
+	<insert id="insertGk_PayDomain" parameterClass="Gk_Paydomain">
+		INSERT INTO gk_pay (
+					       cz_id,   <!-- 财政局编号     -->
+		       pay_id,   <!-- 申请表主键     -->
+		       voucher_no,   <!-- 到账通知单单号     -->
+		       budget_id,   <!-- 指标额度主键     -->
+		       plan_id,   <!-- 计划额度主键     -->
+		       pay_bill_id,   <!-- 对应支付凭证合单主键     -->
+		       pay_bank_bill_id,   <!-- 划款单申请主键     -->
+		       pay_center_bill_id,   <!-- 汇总清算单主键     -->
+		       pay_acc_bill_id,   <!-- 入账通知书单主键     -->
+		       pay_day_bill_id,   <!-- 日报单主键     -->
+		       pay_detail_bill_id,   <!-- 凭证明细记录主键     -->
+		       old_pay_id,   <!-- 原支付申请主键     -->
+		       set_year,   <!-- 业务年度     -->
+		       en_disp_code,   <!-- 预算单位外码     -->
+		       bs_disp_code,   <!-- 功能分类外码     -->
+		       bsi_disp_code,   <!-- 经济分类外码     -->
+		       bis_disp_code,   <!-- 预算项目外码     -->
+		       bi_disp_code,   <!-- 项目分类外码     -->
+		       bp_disp_code,   <!-- 指标类型外码     -->
+		       bo_disp_code,   <!-- 指标来源外码     -->
+		       pk_disp_code,   <!-- 支付类型外码     -->
+		       mk_disp_code,   <!-- 资金性质外码     -->
+		       mb_disp_code,   <!-- 业务处室外码     -->
+		       bt_disp_code,   <!-- 指标流向类型外码     -->
+		       file_disp_code,   <!-- 文号外码     -->
+		       pay_account_disp_code,   <!-- 支付账户外码     -->
+		       clear_account_disp_code,   <!-- 国库清算账户外码     -->
+		       hold1_disp_code,   <!-- 备用1外码     -->
+		       hold2_disp_code,   <!-- 备用2外码     -->
+		       hold3_disp_code,   <!-- 备用3外码     -->
+		       en_name,   <!-- 预算单位名称     -->
+		       bs_name,   <!-- 功能分类名称     -->
+		       bsi_name,   <!-- 经济分类名称     -->
+		       bis_name,   <!-- 预算项目名称     -->
+		       bi_name,   <!-- 项目类别名称     -->
+		       bp_name,   <!-- 指标类型名称     -->
+		       bo_name,   <!-- 指标来源名称     -->
+		       pk_name,   <!-- 支付类型名称     -->
+		       mk_name,   <!-- 资金性质名称     -->
+		       mb_name,   <!-- 业务处室名称     -->
+		       bt_name,   <!-- 指标流向类型名称     -->
+		       file_name,   <!-- 新字段40     -->
+		       pay_account_name,   <!-- 支付账户名称（实拨为预算单位收款账户）     -->
+		       hold1_name,   <!-- 备用1名称     -->
+		       hold2_name,   <!-- 备用2名称     -->
+		       clear_account_name,   <!-- 国库清算账户名称（实拨为国库拨款账户）     -->
+		       hold3_name,   <!-- 备用3名称     -->
+		       clear_bank_disp_code,   <!-- 清算账户银行外码     -->
+		       clear_bank_name,   <!-- 清算账户银行名称     -->
+		       pay_bank_disp_code,   <!-- 支付账户银行外码     -->
+		       pay_bank_name,   <!-- 支付账户银行名称     -->
+		       remark,   <!-- 备注信息     -->
+		       pay_money,   <!-- 申请金额     -->
+		       pay_mode_disp_code,   <!-- 结算方式外码     -->
+		       pay_mode_name,   <!-- 结算名称     -->
+		       pa_disp_code,   <!-- 支付调整类型外码     -->
+		       pa_name,   <!-- 支付调整类型名     -->
+		       input_date,   <!-- 录入日期     -->
+		       pay_date,   <!-- 支付确认日期     -->
+		       accessory_number,   <!-- 附件张数     -->
+		       summary_disp_code,   <!-- 摘要外码     -->
+		       summary_name,   <!-- 摘要名称     -->
+		       payee_bank,   <!-- 收款人银行     -->
+		       payee_account,   <!-- 收款人银行账号     -->
+		       payee_name,   <!-- 收款人名称     -->
+		       is_end,   <!-- 是否接受凭证回单     -->
+		       is_valid,   <!-- 是否有效     -->
+		       confirm_en_code,   <!-- 审批单位     -->
+		       pay_en_acc_bill_id,   <!-- 单位发送授权支付凭证     -->
+		       pf_name,   <!-- 支付管理类型     -->
+		       pf_disp_code,   <!-- 支付管理类型编码     -->
+		       sm_disp_code,   <!-- 用途（指标摘要）外码     -->
+		       sm_name,   <!-- 用途（指标摘要）名称     -->
+		       gb_disp_code,   <!-- 政府采购标志外码     -->
+		       gb_name,   <!-- 政府采购标志名称     -->
+		       saltag_disp_code,   <!-- 工资标志外码     -->
+		       saltag_name,   <!-- 工资标志名称     -->
+		       bk_disp_code,   <!-- 支出类型外码     -->
+		       bk_name,   <!-- 支出类型名称     -->
+		       inpm_disp_code,   <!-- 收支管理外码     -->
+		       inpm_name,   <!-- 收支管理名称     -->
+		       ff_disp_code,   <!-- 专项资金表外码     -->
+		       ff_name,   <!-- 专项资金表名称     -->
+		       groupid_disp_code,   <!-- 分组号外码     -->
+		       groupid_name,   <!-- 分组号名称     -->
+		       check_no,   <!-- 支票号     -->
+		       check_password,   <!-- 支票密码     -->
+		       clear_date,   <!-- 清算日期     -->
+		       pay_type,   <!-- 支付令类型     -->
+		       inputdate,   <!-- 支付令日期     -->
+		       bank_id,   <!-- 代理银行编码     -->
+		       settle_type,   <!-- 结算方式编码     -->
+		       iniaid,   <!-- 原始编号     -->
+		       isexigence,   <!-- 紧急支出标志     -->
+		       gkdm,   <!-- 国库代码     -->
+		       bank_num,   <!-- 代理银行支付系统行号     -->
+		       acct_type,   <!-- 授权支付类型     -->
+		       payback_flag,   <!-- 退回标志     -->
+		       budget_srcid,   <!-- 指标来源     -->
+		       btype_id,   <!-- 指标类型     -->
+		       is_pay,   <!-- 支付标志     -->
+		       liq_status,   <!-- 与财政清算状态     -->
+		       liq_date,   <!-- 与人行清算日期     -->
+		       liq_flag,   <!-- 与人行清算标志     -->
+		       ag_serial,   <!-- 中间业务平台流水号     -->
+		       tx_code,   <!-- 交易代码     -->
+		       tx_date,   <!-- 交易日期     -->
+		       tx_time,   <!-- 交易时间     -->
+		       tx_teller,   <!-- 交易柜员     -->
+		       tx_checker,   <!-- 复核员     -->
+		       prt_times,   <!-- 凭证打印次数     -->
+		       send_flag,   <!-- 上传标志     -->
+		       note,   <!-- 说明     -->
+		       report_flag   <!-- 报表记录生成标志     -->
+
+		       )  
+		  VALUES (    
+		  	   		#cz_id:INTEGER#,   <!-- 财政局编号     -->
+		#pay_id:VARCHAR#,   <!-- 申请表主键     -->
+		#voucher_no:VARCHAR#,   <!-- 到账通知单单号     -->
+		#budget_id:VARCHAR#,   <!-- 指标额度主键     -->
+		#plan_id:VARCHAR#,   <!-- 计划额度主键     -->
+		#pay_bill_id:VARCHAR#,   <!-- 对应支付凭证合单主键     -->
+		#pay_bank_bill_id:VARCHAR#,   <!-- 划款单申请主键     -->
+		#pay_center_bill_id:VARCHAR#,   <!-- 汇总清算单主键     -->
+		#pay_acc_bill_id:VARCHAR#,   <!-- 入账通知书单主键     -->
+		#pay_day_bill_id:VARCHAR#,   <!-- 日报单主键     -->
+		#pay_detail_bill_id:VARCHAR#,   <!-- 凭证明细记录主键     -->
+		#old_pay_id:VARCHAR#,   <!-- 原支付申请主键     -->
+		#set_year:INTEGER#,   <!-- 业务年度     -->
+		#en_disp_code:VARCHAR#,   <!-- 预算单位外码     -->
+		#bs_disp_code:VARCHAR#,   <!-- 功能分类外码     -->
+		#bsi_disp_code:VARCHAR#,   <!-- 经济分类外码     -->
+		#bis_disp_code:VARCHAR#,   <!-- 预算项目外码     -->
+		#bi_disp_code:VARCHAR#,   <!-- 项目分类外码     -->
+		#bp_disp_code:VARCHAR#,   <!-- 指标类型外码     -->
+		#bo_disp_code:VARCHAR#,   <!-- 指标来源外码     -->
+		#pk_disp_code:VARCHAR#,   <!-- 支付类型外码     -->
+		#mk_disp_code:VARCHAR#,   <!-- 资金性质外码     -->
+		#mb_disp_code:VARCHAR#,   <!-- 业务处室外码     -->
+		#bt_disp_code:VARCHAR#,   <!-- 指标流向类型外码     -->
+		#file_disp_code:VARCHAR#,   <!-- 文号外码     -->
+		#pay_account_disp_code:VARCHAR#,   <!-- 支付账户外码     -->
+		#clear_account_disp_code:VARCHAR#,   <!-- 国库清算账户外码     -->
+		#hold1_disp_code:VARCHAR#,   <!-- 备用1外码     -->
+		#hold2_disp_code:VARCHAR#,   <!-- 备用2外码     -->
+		#hold3_disp_code:VARCHAR#,   <!-- 备用3外码     -->
+		#en_name:VARCHAR#,   <!-- 预算单位名称     -->
+		#bs_name:VARCHAR#,   <!-- 功能分类名称     -->
+		#bsi_name:VARCHAR#,   <!-- 经济分类名称     -->
+		#bis_name:VARCHAR#,   <!-- 预算项目名称     -->
+		#bi_name:VARCHAR#,   <!-- 项目类别名称     -->
+		#bp_name:VARCHAR#,   <!-- 指标类型名称     -->
+		#bo_name:VARCHAR#,   <!-- 指标来源名称     -->
+		#pk_name:VARCHAR#,   <!-- 支付类型名称     -->
+		#mk_name:VARCHAR#,   <!-- 资金性质名称     -->
+		#mb_name:VARCHAR#,   <!-- 业务处室名称     -->
+		#bt_name:VARCHAR#,   <!-- 指标流向类型名称     -->
+		#file_name:VARCHAR#,   <!-- 新字段40     -->
+		#pay_account_name:VARCHAR#,   <!-- 支付账户名称（实拨为预算单位收款账户）     -->
+		#hold1_name:VARCHAR#,   <!-- 备用1名称     -->
+		#hold2_name:VARCHAR#,   <!-- 备用2名称     -->
+		#clear_account_name:VARCHAR#,   <!-- 国库清算账户名称（实拨为国库拨款账户）     -->
+		#hold3_name:VARCHAR#,   <!-- 备用3名称     -->
+		#clear_bank_disp_code:VARCHAR#,   <!-- 清算账户银行外码     -->
+		#clear_bank_name:VARCHAR#,   <!-- 清算账户银行名称     -->
+		#pay_bank_disp_code:VARCHAR#,   <!-- 支付账户银行外码     -->
+		#pay_bank_name:VARCHAR#,   <!-- 支付账户银行名称     -->
+		#remark:VARCHAR#,   <!-- 备注信息     -->
+		#pay_money:BIGDECIMAL#,   <!-- 申请金额     -->
+		#pay_mode_disp_code:VARCHAR#,   <!-- 结算方式外码     -->
+		#pay_mode_name:VARCHAR#,   <!-- 结算名称     -->
+		#pa_disp_code:VARCHAR#,   <!-- 支付调整类型外码     -->
+		#pa_name:VARCHAR#,   <!-- 支付调整类型名     -->
+		#input_date:VARCHAR#,   <!-- 录入日期     -->
+		#pay_date:VARCHAR#,   <!-- 支付确认日期     -->
+		#accessory_number:INTEGER#,   <!-- 附件张数     -->
+		#summary_disp_code:VARCHAR#,   <!-- 摘要外码     -->
+		#summary_name:VARCHAR#,   <!-- 摘要名称     -->
+		#payee_bank:VARCHAR#,   <!-- 收款人银行     -->
+		#payee_account:VARCHAR#,   <!-- 收款人银行账号     -->
+		#payee_name:VARCHAR#,   <!-- 收款人名称     -->
+		#is_end:VARCHAR#,   <!-- 是否接受凭证回单     -->
+		#is_valid:VARCHAR#,   <!-- 是否有效     -->
+		#confirm_en_code:VARCHAR#,   <!-- 审批单位     -->
+		#pay_en_acc_bill_id:VARCHAR#,   <!-- 单位发送授权支付凭证     -->
+		#pf_name:VARCHAR#,   <!-- 支付管理类型     -->
+		#pf_disp_code:VARCHAR#,   <!-- 支付管理类型编码     -->
+		#sm_disp_code:VARCHAR#,   <!-- 用途（指标摘要）外码     -->
+		#sm_name:VARCHAR#,   <!-- 用途（指标摘要）名称     -->
+		#gb_disp_code:VARCHAR#,   <!-- 政府采购标志外码     -->
+		#gb_name:VARCHAR#,   <!-- 政府采购标志名称     -->
+		#saltag_disp_code:VARCHAR#,   <!-- 工资标志外码     -->
+		#saltag_name:VARCHAR#,   <!-- 工资标志名称     -->
+		#bk_disp_code:VARCHAR#,   <!-- 支出类型外码     -->
+		#bk_name:VARCHAR#,   <!-- 支出类型名称     -->
+		#inpm_disp_code:VARCHAR#,   <!-- 收支管理外码     -->
+		#inpm_name:VARCHAR#,   <!-- 收支管理名称     -->
+		#ff_disp_code:VARCHAR#,   <!-- 专项资金表外码     -->
+		#ff_name:VARCHAR#,   <!-- 专项资金表名称     -->
+		#groupid_disp_code:VARCHAR#,   <!-- 分组号外码     -->
+		#groupid_name:VARCHAR#,   <!-- 分组号名称     -->
+		#check_no:VARCHAR#,   <!-- 支票号     -->
+		#check_password:VARCHAR#,   <!-- 支票密码     -->
+		#clear_date:VARCHAR#,   <!-- 清算日期     -->
+		#pay_type:VARCHAR#,   <!-- 支付令类型     -->
+		#inputdate:VARCHAR#,   <!-- 支付令日期     -->
+		#bank_id:VARCHAR#,   <!-- 代理银行编码     -->
+		#settle_type:INTEGER#,   <!-- 结算方式编码     -->
+		#iniaid:VARCHAR#,   <!-- 原始编号     -->
+		#isexigence:INTEGER#,   <!-- 紧急支出标志     -->
+		#gkdm:VARCHAR#,   <!-- 国库代码     -->
+		#bank_num:VARCHAR#,   <!-- 代理银行支付系统行号     -->
+		#acct_type:INTEGER#,   <!-- 授权支付类型     -->
+		#payback_flag:VARCHAR#,   <!-- 退回标志     -->
+		#budget_srcid:VARCHAR#,   <!-- 指标来源     -->
+		#btype_id:VARCHAR#,   <!-- 指标类型     -->
+		#is_pay:VARCHAR#,   <!-- 支付标志     -->
+		#liq_status:INTEGER#,   <!-- 与财政清算状态     -->
+		#liq_date:VARCHAR#,   <!-- 与人行清算日期     -->
+		#liq_flag:INTEGER#,   <!-- 与人行清算标志     -->
+		#ag_serial:INTEGER#,   <!-- 中间业务平台流水号     -->
+		#tx_code:VARCHAR#,   <!-- 交易代码     -->
+		#tx_date:VARCHAR#,   <!-- 交易日期     -->
+		#tx_time:VARCHAR#,   <!-- 交易时间     -->
+		#tx_teller:VARCHAR#,   <!-- 交易柜员     -->
+		#tx_checker:VARCHAR#,   <!-- 复核员     -->
+		#prt_times:INTEGER#,   <!-- 凭证打印次数     -->
+		#send_flag:VARCHAR#,   <!-- 上传标志     -->
+		#note:VARCHAR#,   <!-- 说明     -->
+		#report_flag:INTEGER#   <!-- 报表记录生成标志     -->
+
+		       )  
+		  
+	</insert>
+
+	
+		<update id="updateGk_PayDomain" parameterClass="Gk_Paydomain">
+		UPDATE gk_pay  
+		<dynamic prepend="SET">
+		       		    <isNotEmpty prepend="," property="cz_id">   <!-- 财政局编号    -->
+		       cz_id = #cz_id:INTEGER#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pay_id">   <!-- 申请表主键    -->
+		       pay_id = #pay_id:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="voucher_no">   <!-- 到账通知单单号    -->
+		       voucher_no = #voucher_no:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="budget_id">   <!-- 指标额度主键    -->
+		       budget_id = #budget_id:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="plan_id">   <!-- 计划额度主键    -->
+		       plan_id = #plan_id:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pay_bill_id">   <!-- 对应支付凭证合单主键    -->
+		       pay_bill_id = #pay_bill_id:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pay_bank_bill_id">   <!-- 划款单申请主键    -->
+		       pay_bank_bill_id = #pay_bank_bill_id:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pay_center_bill_id">   <!-- 汇总清算单主键    -->
+		       pay_center_bill_id = #pay_center_bill_id:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pay_acc_bill_id">   <!-- 入账通知书单主键    -->
+		       pay_acc_bill_id = #pay_acc_bill_id:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pay_day_bill_id">   <!-- 日报单主键    -->
+		       pay_day_bill_id = #pay_day_bill_id:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pay_detail_bill_id">   <!-- 凭证明细记录主键    -->
+		       pay_detail_bill_id = #pay_detail_bill_id:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="old_pay_id">   <!-- 原支付申请主键    -->
+		       old_pay_id = #old_pay_id:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="set_year">   <!-- 业务年度    -->
+		       set_year = #set_year:INTEGER#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="en_disp_code">   <!-- 预算单位外码    -->
+		       en_disp_code = #en_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="bs_disp_code">   <!-- 功能分类外码    -->
+		       bs_disp_code = #bs_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="bsi_disp_code">   <!-- 经济分类外码    -->
+		       bsi_disp_code = #bsi_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="bis_disp_code">   <!-- 预算项目外码    -->
+		       bis_disp_code = #bis_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="bi_disp_code">   <!-- 项目分类外码    -->
+		       bi_disp_code = #bi_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="bp_disp_code">   <!-- 指标类型外码    -->
+		       bp_disp_code = #bp_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="bo_disp_code">   <!-- 指标来源外码    -->
+		       bo_disp_code = #bo_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pk_disp_code">   <!-- 支付类型外码    -->
+		       pk_disp_code = #pk_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="mk_disp_code">   <!-- 资金性质外码    -->
+		       mk_disp_code = #mk_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="mb_disp_code">   <!-- 业务处室外码    -->
+		       mb_disp_code = #mb_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="bt_disp_code">   <!-- 指标流向类型外码    -->
+		       bt_disp_code = #bt_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="file_disp_code">   <!-- 文号外码    -->
+		       file_disp_code = #file_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pay_account_disp_code">   <!-- 支付账户外码    -->
+		       pay_account_disp_code = #pay_account_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="clear_account_disp_code">   <!-- 国库清算账户外码    -->
+		       clear_account_disp_code = #clear_account_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="hold1_disp_code">   <!-- 备用1外码    -->
+		       hold1_disp_code = #hold1_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="hold2_disp_code">   <!-- 备用2外码    -->
+		       hold2_disp_code = #hold2_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="hold3_disp_code">   <!-- 备用3外码    -->
+		       hold3_disp_code = #hold3_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="en_name">   <!-- 预算单位名称    -->
+		       en_name = #en_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="bs_name">   <!-- 功能分类名称    -->
+		       bs_name = #bs_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="bsi_name">   <!-- 经济分类名称    -->
+		       bsi_name = #bsi_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="bis_name">   <!-- 预算项目名称    -->
+		       bis_name = #bis_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="bi_name">   <!-- 项目类别名称    -->
+		       bi_name = #bi_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="bp_name">   <!-- 指标类型名称    -->
+		       bp_name = #bp_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="bo_name">   <!-- 指标来源名称    -->
+		       bo_name = #bo_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pk_name">   <!-- 支付类型名称    -->
+		       pk_name = #pk_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="mk_name">   <!-- 资金性质名称    -->
+		       mk_name = #mk_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="mb_name">   <!-- 业务处室名称    -->
+		       mb_name = #mb_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="bt_name">   <!-- 指标流向类型名称    -->
+		       bt_name = #bt_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="file_name">   <!-- 新字段40    -->
+		       file_name = #file_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pay_account_name">   <!-- 支付账户名称（实拨为预算单位收款账户）    -->
+		       pay_account_name = #pay_account_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="hold1_name">   <!-- 备用1名称    -->
+		       hold1_name = #hold1_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="hold2_name">   <!-- 备用2名称    -->
+		       hold2_name = #hold2_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="clear_account_name">   <!-- 国库清算账户名称（实拨为国库拨款账户）    -->
+		       clear_account_name = #clear_account_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="hold3_name">   <!-- 备用3名称    -->
+		       hold3_name = #hold3_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="clear_bank_disp_code">   <!-- 清算账户银行外码    -->
+		       clear_bank_disp_code = #clear_bank_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="clear_bank_name">   <!-- 清算账户银行名称    -->
+		       clear_bank_name = #clear_bank_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pay_bank_disp_code">   <!-- 支付账户银行外码    -->
+		       pay_bank_disp_code = #pay_bank_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pay_bank_name">   <!-- 支付账户银行名称    -->
+		       pay_bank_name = #pay_bank_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="remark">   <!-- 备注信息    -->
+		       remark = #remark:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pay_money">   <!-- 申请金额    -->
+		       pay_money = #pay_money:BIGDECIMAL#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pay_mode_disp_code">   <!-- 结算方式外码    -->
+		       pay_mode_disp_code = #pay_mode_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pay_mode_name">   <!-- 结算名称    -->
+		       pay_mode_name = #pay_mode_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pa_disp_code">   <!-- 支付调整类型外码    -->
+		       pa_disp_code = #pa_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pa_name">   <!-- 支付调整类型名    -->
+		       pa_name = #pa_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="input_date">   <!-- 录入日期    -->
+		       input_date = #input_date:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pay_date">   <!-- 支付确认日期    -->
+		       pay_date = #pay_date:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="accessory_number">   <!-- 附件张数    -->
+		       accessory_number = #accessory_number:INTEGER#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="summary_disp_code">   <!-- 摘要外码    -->
+		       summary_disp_code = #summary_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="summary_name">   <!-- 摘要名称    -->
+		       summary_name = #summary_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="payee_bank">   <!-- 收款人银行    -->
+		       payee_bank = #payee_bank:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="payee_account">   <!-- 收款人银行账号    -->
+		       payee_account = #payee_account:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="payee_name">   <!-- 收款人名称    -->
+		       payee_name = #payee_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="is_end">   <!-- 是否接受凭证回单    -->
+		       is_end = #is_end:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="is_valid">   <!-- 是否有效    -->
+		       is_valid = #is_valid:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="confirm_en_code">   <!-- 审批单位    -->
+		       confirm_en_code = #confirm_en_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pay_en_acc_bill_id">   <!-- 单位发送授权支付凭证    -->
+		       pay_en_acc_bill_id = #pay_en_acc_bill_id:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pf_name">   <!-- 支付管理类型    -->
+		       pf_name = #pf_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pf_disp_code">   <!-- 支付管理类型编码    -->
+		       pf_disp_code = #pf_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="sm_disp_code">   <!-- 用途（指标摘要）外码    -->
+		       sm_disp_code = #sm_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="sm_name">   <!-- 用途（指标摘要）名称    -->
+		       sm_name = #sm_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="gb_disp_code">   <!-- 政府采购标志外码    -->
+		       gb_disp_code = #gb_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="gb_name">   <!-- 政府采购标志名称    -->
+		       gb_name = #gb_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="saltag_disp_code">   <!-- 工资标志外码    -->
+		       saltag_disp_code = #saltag_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="saltag_name">   <!-- 工资标志名称    -->
+		       saltag_name = #saltag_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="bk_disp_code">   <!-- 支出类型外码    -->
+		       bk_disp_code = #bk_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="bk_name">   <!-- 支出类型名称    -->
+		       bk_name = #bk_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="inpm_disp_code">   <!-- 收支管理外码    -->
+		       inpm_disp_code = #inpm_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="inpm_name">   <!-- 收支管理名称    -->
+		       inpm_name = #inpm_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="ff_disp_code">   <!-- 专项资金表外码    -->
+		       ff_disp_code = #ff_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="ff_name">   <!-- 专项资金表名称    -->
+		       ff_name = #ff_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="groupid_disp_code">   <!-- 分组号外码    -->
+		       groupid_disp_code = #groupid_disp_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="groupid_name">   <!-- 分组号名称    -->
+		       groupid_name = #groupid_name:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="check_no">   <!-- 支票号    -->
+		       check_no = #check_no:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="check_password">   <!-- 支票密码    -->
+		       check_password = #check_password:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="clear_date">   <!-- 清算日期    -->
+		       clear_date = #clear_date:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="pay_type">   <!-- 支付令类型    -->
+		       pay_type = #pay_type:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="inputdate">   <!-- 支付令日期    -->
+		       inputdate = #inputdate:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="bank_id">   <!-- 代理银行编码    -->
+		       bank_id = #bank_id:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="settle_type">   <!-- 结算方式编码    -->
+		       settle_type = #settle_type:INTEGER#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="iniaid">   <!-- 原始编号    -->
+		       iniaid = #iniaid:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="isexigence">   <!-- 紧急支出标志    -->
+		       isexigence = #isexigence:INTEGER#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="gkdm">   <!-- 国库代码    -->
+		       gkdm = #gkdm:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="bank_num">   <!-- 代理银行支付系统行号    -->
+		       bank_num = #bank_num:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="acct_type">   <!-- 授权支付类型    -->
+		       acct_type = #acct_type:INTEGER#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="payback_flag">   <!-- 退回标志    -->
+		       payback_flag = #payback_flag:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="budget_srcid">   <!-- 指标来源    -->
+		       budget_srcid = #budget_srcid:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="btype_id">   <!-- 指标类型    -->
+		       btype_id = #btype_id:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="is_pay">   <!-- 支付标志    -->
+		       is_pay = #is_pay:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="liq_status">   <!-- 与财政清算状态    -->
+		       liq_status = #liq_status:INTEGER#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="liq_date">   <!-- 与人行清算日期    -->
+		       liq_date = #liq_date:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="liq_flag">   <!-- 与人行清算标志    -->
+		       liq_flag = #liq_flag:INTEGER#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="ag_serial">   <!-- 中间业务平台流水号    -->
+		       ag_serial = #ag_serial:INTEGER#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="tx_code">   <!-- 交易代码    -->
+		       tx_code = #tx_code:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="tx_date">   <!-- 交易日期    -->
+		       tx_date = #tx_date:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="tx_time">   <!-- 交易时间    -->
+		       tx_time = #tx_time:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="tx_teller">   <!-- 交易柜员    -->
+		       tx_teller = #tx_teller:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="tx_checker">   <!-- 复核员    -->
+		       tx_checker = #tx_checker:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="prt_times">   <!-- 凭证打印次数    -->
+		       prt_times = #prt_times:INTEGER#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="send_flag">   <!-- 上传标志    -->
+		       send_flag = #send_flag:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="note">   <!-- 说明    -->
+		       note = #note:VARCHAR#             
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="report_flag">   <!-- 报表记录生成标志    -->
+		       report_flag = #report_flag:INTEGER#             
+		    </isNotEmpty>
+              
+		</dynamic>	
+		 WHERE 1 = 1 
+<![CDATA[	   AND key = #key#    ]]>    <!-- 主键 -->
+	</update>
+
+		 
+		<!--通过主键删除单条数据-->
+	<delete id="deleteGk_PayDomain" parameterClass="map">
+		DELETE gk_pay
+		 WHERE 1 = 1 
+<![CDATA[	   AND key = #key#    ]]>    <!-- 主键 -->
+	</delete>
+	
+		
+</sqlMap>

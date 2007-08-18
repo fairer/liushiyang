@@ -1,0 +1,40 @@
+/**
+*
+* <p>Title:  %tablechinaname%</p>
+* <p>Description: </p>
+* <p>Copyright: Copyright (c) 2007</p>
+* <p>Company: icitic</p>
+* @author lsy
+* @version 1.0
+*/
+public class %tablename%Domain extends BaseDomain{
+
+	%domainchild%
+	
+	public String validate(){
+		String recstr = "";
+		
+		%domainvalidate%
+		
+		if(recstr.equals(""))
+			recstr = "OK";	
+		return recstr;	
+	}
+	public void gBKToISO(){
+		try {
+			%domainencodegbk%
+			
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	}
+	public void iSOToGBK(){
+		try {
+			%domainencodeiso%
+			
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	}
+	
+}

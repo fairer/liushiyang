@@ -1,0 +1,1 @@
+		       %childname% as %childname%,   <!-- %childcomment%     -->

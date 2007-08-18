@@ -1,0 +1,18 @@
+	/**
+	 * %childcomment%	
+	 */
+	private %childtype% %childname%;
+	/**
+	 * %childcomment%
+	 * @return the %childname%
+	 */
+	public %childtype% get%bigchildname%() {
+		return %childname%;
+	}
+	/**
+	 * %childcomment%
+	 * @param %childcomment%
+	 */
+	public void set%bigchildname%(%childtype% %childname%) {
+		this.%childname% = %childname%;
+	}

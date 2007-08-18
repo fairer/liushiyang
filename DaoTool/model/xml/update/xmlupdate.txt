@@ -1,0 +1,8 @@
+	<update id="update%tablename%Domain" parameterClass="%tablename%domain">
+		UPDATE %smalltablename%  
+		<dynamic prepend="SET">
+		       %updateitem%              
+		</dynamic>	
+		 WHERE 1 = 1 
+<![CDATA[	   AND key = #key#    ]]>    <!-- Ö÷¼ü -->
+	</update>

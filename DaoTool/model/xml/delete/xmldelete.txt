@@ -1,0 +1,6 @@
+	<!--通过主键删除单条数据-->
+	<delete id="delete%tablename%Domain" parameterClass="map">
+		DELETE %smalltablename%
+		 WHERE 1 = 1 
+<![CDATA[	   AND key = #key#    ]]>    <!-- 主键 -->
+	</delete>
