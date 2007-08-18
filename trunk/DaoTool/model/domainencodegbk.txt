@@ -1,0 +1,2 @@
+		if(this.%childname% != null)	
+			this.%childname% = new String(this.%childname%.getBytes("GBK"),"ISO8859-1");

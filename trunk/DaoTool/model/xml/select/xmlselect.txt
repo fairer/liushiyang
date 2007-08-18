@@ -1,0 +1,9 @@
+	<select id="query%tablename%Domain" parameterClass="map" resultClass="%tablename%domain">
+		SELECT 
+		       %selectitem%
+		  FROM %smalltablename% a
+		 where 1 = 1
+		 
+		 %selectparam%
+		
+	</select>

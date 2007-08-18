@@ -1,0 +1,9 @@
+<insert id="insert%tablename%Domain" parameterClass="%tablename%domain">
+		INSERT INTO %smalltablename% (
+			%insertitem%
+		       )  
+		  VALUES (    
+		  	   %insertparam%
+		       )  
+		  
+	</insert>

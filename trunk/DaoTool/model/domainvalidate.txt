@@ -1,0 +1,2 @@
+	    if(this.%childname% == null)
+		     recstr = recstr + "%childname%(%childcomment%)²»ÄÜÎª¿Õ!\n";
