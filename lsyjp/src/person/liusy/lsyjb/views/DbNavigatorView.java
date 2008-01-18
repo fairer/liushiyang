@@ -28,7 +28,6 @@ import person.liusy.lsyjb.tree.impl.NavigatorEntry;
 
 public class DbNavigatorView extends ViewPart{
 
-	@Override
 	public void createPartControl(Composite parent) {
 		// TODO Auto-generated method stub
 		Composite comp = new Composite(parent,SWT.NONE);
@@ -45,7 +44,6 @@ public class DbNavigatorView extends ViewPart{
 		actionGroup.fillActionBars(bars);
 	}
 
-	@Override
 	public void setFocus() {
 		// TODO Auto-generated method stub
 		
