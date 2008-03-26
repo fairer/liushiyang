@@ -105,10 +105,20 @@ public class AddColumnDialog extends Dialog {
 			public void widgetSelected(final SelectionEvent e) {
 				String typevalue = (String)type.getData(type.getText());
 				if(typevalue.equals("3")){
+					length.setText("");
+					xslength.setText("");
+					length.setEditable(true);
 					xslength.setEditable(true);
 				}
-				else{
+				else if(typevalue.equals("1")){
 					xslength.setText("");
+					xslength.setEditable(false);
+					length.setText("");
+					length.setEditable(false);
+				}else{
+					length.setText("");
+					xslength.setText("");
+					length.setEditable(true);
 					xslength.setEditable(false);
 				}
 			}
