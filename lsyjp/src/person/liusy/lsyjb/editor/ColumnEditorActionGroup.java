@@ -56,7 +56,10 @@ public class ColumnEditorActionGroup extends ActionGroup{
 			setText("ÐÞ¸Ä");
 			setHoverImageDescriptor(LsyImages.getImageDescriptor(LsyImages.TABLE));
 		}
-		public void run(){}
+		public void run(){
+			tv.getSelection();
+			
+		}
 	}
 	private class DeleteAction extends Action{
 		
