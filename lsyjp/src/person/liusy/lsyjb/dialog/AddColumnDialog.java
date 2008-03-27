@@ -191,17 +191,22 @@ public class AddColumnDialog extends Dialog {
 				cdomain.setIskey(iskey.getSelection()?"1":"0");
 				cdomain.setIsnull(isnull.getSelection()?"1":"0");
 				cdomain.setIsvalid("1");
-				cdomain.setLength(new Integer(length.getText()));
+				cdomain.setLength(length.getText().trim().equals("")?null:new Integer(length.getText()));
 				cdomain.setName(name.getText());
 				cdomain.setNote(note.getText());
-				cdomain.setPxh(new Integer(pxh.getText()));
+				cdomain.setPxh(pxh.getText().trim().equals("")?null:new Integer(pxh.getText()));
 				TableDomain tdomain = (TableDomain)info.get("table"); 
 				System.out.println(tdomain);
 				cdomain.setTable_id(tdomain.getId());
 				cdomain.setType((String)type.getData(type.getText()));
-				System.out.println(xslength);
 				cdomain.setXslength(xslength.getText().trim().equals("")?null:new Integer(xslength.getText()));
-				dbOperator.addColumn(cdomain);
+				String action = (String)info.get("action");
+				if(action.equals("create")){
+					dbOperator.addColumn(cdomain);
+				}else if(action.equals("edit")){
+					cdomain.setId(new Integer(id.getText()));
+					dbOperator.editColumn(cdomain);
+				}
 				result = "OK";
 				shell.dispose();
 			}
@@ -225,6 +230,22 @@ public class AddColumnDialog extends Dialog {
 			String temp = (String)info.get("action");
 			if(temp.equals("create")){
 				id.setEditable(false);
+			}else if(temp.equals("edit")){
+				id.setEditable(false);
+				ColumnDomain cdomain = (ColumnDomain)info.get("column");
+				cnname.setText(cdomain.getCnname());
+				isindex.setSelection(cdomain.getIsindex().equals("1")?true:false);
+				iskey.setSelection(cdomain.getIskey().equals("1")?true:false);
+				isnull.setSelection(cdomain.getIsnull().equals("1")?true:false);
+				length.setText(cdomain.getLength().toString());
+				name.setText(cdomain.getName());
+				note.setText(cdomain.getNote());
+				pxh.setText(cdomain.getPxh().toString());
+				type.setData(cdomain.getType());
+				type.select(new Integer(cdomain.getType()).intValue()-1);
+				id.setText(cdomain.getId().toString());
+//				cdomain.setType((String)type.getData(type.getText()));
+				xslength.setText(cdomain.getXslength().toString());
 			}
 			
 		
