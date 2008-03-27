@@ -7,10 +7,13 @@ import java.util.Map;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.actions.ActionGroup;
 
 import person.liusy.lsyjb.db.DbOperator;
+import person.liusy.lsyjb.db.doman.ColumnDomain;
 import person.liusy.lsyjb.db.doman.TableDomain;
 import person.liusy.lsyjb.dialog.AddColumnDialog;
 import person.liusy.lsyjb.system.LsyImages;
@@ -57,7 +60,25 @@ public class ColumnEditorActionGroup extends ActionGroup{
 			setHoverImageDescriptor(LsyImages.getImageDescriptor(LsyImages.TABLE));
 		}
 		public void run(){
-			tv.getSelection();
+			if(tv.getTable().getSelectionCount()!=1){
+				MessageDialog.openInformation(null, "提示信息", "请选择一条字段信息!");
+			}else{
+				TableItem[] item = tv.getTable().getSelection();
+				Map map = new HashMap();
+				map.put("action", "edit");
+				map.put("table", tableDomain);
+				map.put("column", (ColumnDomain)item[0].getData());
+				
+				AddColumnDialog dialog = new AddColumnDialog(LsyjbUtil.getShell(),map);
+				String result = (String)dialog.open();
+				if(result != null && result.equals("OK")){
+					//查询表的所有字段
+					DbOperator dbOperator = new DbOperator();
+					List input  = dbOperator.getColumnlist(tableDomain.getId().toString());
+					tv.setInput(input);
+				}
+			}
+			
 			
 		}
 	}
@@ -68,6 +89,22 @@ public class ColumnEditorActionGroup extends ActionGroup{
 			setHoverImageDescriptor(LsyImages.getImageDescriptor(LsyImages.ADDDATABASE));
 		}
 		public void run(){
+			if(tv.getTable().getSelectionCount()==0){
+				MessageDialog.openInformation(null, "提示信息", "请选择要删除的字段!");
+			}else{
+				
+				if(MessageDialog.openConfirm(null, "删除确认", "确定要删除选中的字段吗")){
+					TableItem[] item = tv.getTable().getSelection();
+					DbOperator dbOperator = new DbOperator();
+					for(int i=0;i<item.length;i++){
+						ColumnDomain cd = (ColumnDomain)item[i].getData();
+						dbOperator.deleteColumn(cd);
+					}
+					List input  = dbOperator.getColumnlist(tableDomain.getId().toString());
+					tv.setInput(input);
+				}
+				
+			}
 			
 		}
 	}

@@ -51,21 +51,21 @@ public class ColumnEditor extends EditorPartAdapter{
 		tv.setContentProvider(new LsyTableContentProvider());
 		//工具栏
 		actionGroup  = new ColumnEditorActionGroup(tv);
-		ToolBar toolBar = new ToolBar(viewForm,SWT.FLAT);
-		ToolBarManager toolBarManager = new ToolBarManager(toolBar);
-		actionGroup.fillActionToolBars(toolBarManager);
+//		ToolBar toolBar = new ToolBar(viewForm,SWT.FLAT);
+//		ToolBarManager toolBarManager = new ToolBarManager(toolBar);
+//		actionGroup.fillActionToolBars(toolBarManager);
 		
-		ColumnDomain columnDomain = new ColumnDomain();
-		columnDomain.setId(new Integer(1));
-		columnDomain.setName("aac001");
-		columnDomain.setCnname("个人编号");
-		columnDomain.setIskey("1");
-		columnDomain.setIsnull("0");
-		columnDomain.setType("2");
-		columnDomain.setLength(new Integer(18));
-		List list = new ArrayList();
-		list.add(columnDomain);
-		tv.setInput(list);
+//		ColumnDomain columnDomain = new ColumnDomain();
+//		columnDomain.setId(new Integer(1));
+//		columnDomain.setName("aac001");
+//		columnDomain.setCnname("个人编号");
+//		columnDomain.setIskey("1");
+//		columnDomain.setIsnull("0");
+//		columnDomain.setType("2");
+//		columnDomain.setLength(new Integer(18));
+//		List list = new ArrayList();
+//		list.add(columnDomain);
+//		tv.setInput(list);
 		viewForm.setContent(tv.getControl());
 		MenuManager menu = new MenuManager();
 		Menu mm = menu.createContextMenu(tv.getTable());
